@@ -1,0 +1,37 @@
+.inputBox {
+	width: 80%;
+	padding: 1rem;
+}
+.inputDiv {
+	margin: 1rem;
+}
+
+input {
+	padding: 1rem;
+	outline: none;
+	border: none;
+	border-bottom: 2px var(--color) solid;
+	background: none;
+}
+
+.goals {
+	margin: 1rem;
+}
+
+button {
+	border: 2px var(--color) solid;
+	border-radius: 0.5rem;
+	padding: 1rem;
+	margin: 1rem;
+	background: none;
+	color: inherit;
+	transition-property: box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+}
+
+button:hover {
+	cursor: pointer;
+	box-shadow: 4px 4px 1px #ff6200;
+	transform: translateY(0.1rem);
+}

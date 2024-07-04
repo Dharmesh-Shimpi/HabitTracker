@@ -1,0 +1,59 @@
+.themeDiv {
+	align-items: center;
+	padding: 0.7rem;
+	border: 2px var(--color) solid;
+	border-radius: 0.5rem;
+	transition-property: box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+}
+
+.themeDiv:hover {
+	cursor: pointer;
+	box-shadow: 4px 4px 1px 1px #ff6200;
+	transform: translateY(0.1rem);
+}
+
+.On {
+	position: absolute;
+	right: 5rem;
+	top: 7rem;
+	width: 20rem;
+	height: 15rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	border: 2px var(--color) solid;
+	border-radius: 0.5rem;
+	overflow-y: scroll;
+}
+
+.Off {
+	display: none;
+}
+
+ul {
+	margin: 1.5rem;
+}
+
+.text {
+	font-size: xx-large;
+}
+
+li {
+	border-radius: 0.5rem;
+	transition-property: box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+	margin: 0.5rem;
+}
+
+li:hover {
+	cursor: pointer;
+	box-shadow: 3px 3px 0px 1px #ff6200;
+	transform: translateY(0.1rem);
+}
+
+.t {
+	margin: 0.5rem;
+}

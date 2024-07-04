@@ -1,0 +1,72 @@
+/* Nav.module.css */
+.nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-align: center;
+	height: 6rem;
+	width: 100%;
+	border-bottom: 2px var(--color) solid;
+	padding-left: 5rem;
+}
+
+.img {
+	height: 4rem;
+	width: 7rem;
+}
+
+.right {
+	height: 5rem;
+	width: 30rem;
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: row;
+	align-items: center;
+	/* border: 2px wheat solid; */
+}
+
+.input {
+	height: 3rem;
+	width: 9.3rem;
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: row;
+	align-items: center;
+	text-decoration: none;
+	border: 2px var(--color) solid;
+	border-radius: 0.5rem;
+	transition-property: box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+	color: inherit;
+}
+
+.input:hover {
+	cursor: pointer;
+	box-shadow: 4px 4px 1px 1px #ff6200;
+	transform: translateY(0.1rem);
+}
+
+.i {
+	background: none;
+}
+
+.logout {
+	height: 3rem;
+	width: 7rem;
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: row;
+	align-items: center;
+	border: 2px var(--color) solid;
+	border-radius: 0.5rem;
+	transition-property: background, box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+}
+
+.logout:hover {
+	cursor: pointer;
+	box-shadow: 4px 4px 1px 1px #ff6200;
+	transform: translateY(0.1rem);
+}

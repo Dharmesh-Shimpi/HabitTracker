@@ -1,0 +1,368 @@
+:root {
+	--font-family: 'Poppins', sans-serif;
+	--font-weight: 400;
+	--background-image: url(/confetti-doodles-brown.svg);
+	--font-size: 20px;
+	--color: wheat;
+}
+
+* {
+	font-family: var(--font-family);
+	font-optical-sizing: auto;
+	font-weight: var(--font-weight);
+	font-size: var(--font-size);
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	color: var(--color);
+	overflow-x: hidden;
+}
+
+body {
+	font-family: var(--font-family);
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--color);
+	background-image: var(--background-image);
+	background-size: auto;
+	background-position: center;
+	background-repeat: repeat;
+	transition: background-image 1s ease-in-out, transform 1s ease-in-out;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-ms-backface-visibility: hidden;
+}
+
+h2 {
+	text-align: center;
+	font-size: xx-large;
+}
+
+h3 {
+	text-align: center;
+	font-size: x-large;
+	color: red;
+}
+
+h4 {
+	text-align: center;
+	font-size: x-large;
+	color: green;
+}
+
+p {
+	text-align: center;
+}
+
+/* 
+	font-family: "Cedarville Cursive", cursive;
+	font-family: "Poppins", sans-serif; 
+*/
+
+/* width */
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+	background: red;
+	border-radius: 10px;
+}
+
+@keyframes smooth-zoom {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@media screen and (min-width: 344px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 11px;
+	}
+
+	body {
+		max-width: 340px;
+	}
+}
+
+@media screen and (min-width: 368px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 12px;
+	}
+
+	body {
+		max-width: 364px;
+	}
+}
+
+@media screen and (min-width: 390px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 13px;
+	}
+
+	body {
+		max-width: 386px;
+	}
+}
+
+@media screen and (min-width: 412px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 13px;
+	}
+
+	body {
+		max-width: 408px;
+	}
+}
+
+@media screen and (min-width: 430px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 13px;
+	}
+
+	body {
+		max-width: 426px;
+	}
+}
+
+@media screen and (min-width: 472px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 13px;
+	}
+
+	body {
+		max-width: 468px;
+	}
+}
+
+@media screen and (min-width: 500px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 14px;
+	}
+
+	body {
+		max-width: 496px;
+	}
+}
+
+@media screen and (min-width: 526px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 14px;
+	}
+
+	body {
+		max-width: 522px;
+	}
+}
+
+@media screen and (min-width: 574px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 15px;
+	}
+
+	body {
+		max-width: 570px;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 15px;
+	}
+
+	body {
+		max-width: 496px;
+	}
+}
+
+@media screen and (min-width: 624px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 16px;
+	}
+
+	body {
+		max-width: 620px;
+	}
+}
+@media screen and (min-width: 674px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 16px;
+	}
+
+	body {
+		max-width: 670px;
+	}
+}
+
+@media screen and (min-width: 700px) {
+	/* CSS rules for screens up to 480px wide */
+	* {
+		font-size: 17px;
+	}
+
+	body {
+		max-width: 696px;
+	}
+}
+
+@media screen and (min-width: 720px) {
+	/* CSS rules for screens up to 720px wide */
+	* {
+		font-size: 18px;
+	}
+	body {
+		max-width: 716px;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 764px;
+	}
+}
+
+/* 1080px */
+@media screen and (min-width: 820px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 816px;
+	}
+}
+
+@media screen and (min-width: 876px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 872px;
+	}
+}
+
+@media screen and (min-width: 900px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 896px;
+	}
+}
+
+@media screen and (min-width: 926px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 922px;
+	}
+}
+
+@media screen and (min-width: 978px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 974px;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 996px;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 1020px;
+	}
+}
+
+@media screen and (min-width: 1080px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 100%;
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 100%;
+	}
+}
+
+@media screen and (min-width: 1440px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 100%;
+	}
+}
+
+@media screen and (min-width: 2160px) {
+	/* CSS rules for screens up to 1080px wide */
+	* {
+		font-size: 20px;
+	}
+	body {
+		max-width: 2160px;
+	}
+}
