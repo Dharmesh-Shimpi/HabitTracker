@@ -1,15 +1,18 @@
 .body {
-	height: 34rem;
-	width: 30%;
+	/* border: 1px white solid; */
+	height: 100%;
+	width: 25%;
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	/* flex-grow: 1; */
 	border-right: 2px var(--color) solid;
 }
 
-.main {
-	height: 15rem;
+.habit {
+	/* padding-top: 2rem; */
+	height: 50%;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -17,28 +20,50 @@
 	align-items: center;
 	border-radius: 1rem;
 	/* border: 1px white solid; */
-    overflow-y: scroll;
-    overflow-wrap: break-word;
-    scrollbar-width: 5px;
+	overflow-y: scroll;
+	overflow-wrap: break-word;
+	scrollbar-width: 5px;
 }
 
-.habits {
-	height: 3.2vh;
+.h {
+	margin: 2rem;
+}
+
+.ul {
 	width: 100%;
-	background-color: rgb(66, 66, 66);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	color: wheat;
-	cursor: pointer;
 }
 
-.habits:hover {
-	border: 1px solid white;
+.link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 3rem;
+	width: 80%;
+	color: var(--color);
+	text-align: center;
+	border: 2px solid var(--color);
+	border-radius: 0.5rem;
+	transition-property: box-shadow, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+	margin: 0.5rem;
+	text-decoration: none;
+}
+
+.li{
+	width: 100%;
+}
+
+.link:hover {
+	cursor: pointer;
+	box-shadow: 2px 2px 0px 1px #ff6200;
+	transform: translateY(0.1rem);
 }
 
 h1 {
 	font-size: xx-large;
 }
-

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import api from '../../../../utils/axios';
+import api from '../../../utils/axios';
 import css from './Oauth.module.css';
 
 export const OAuth = () => {
-	
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
@@ -24,7 +23,7 @@ export const OAuth = () => {
 			{!loading && !error && (
 				<>
 					<i className={`fa-brands fa-google ${css.i}`}></i>
-					<p className={css.text}>Continue with Google</p>
+					<span className={css.text}>Continue with Google</span>
 				</>
 			)}
 			{loading && <p>Loading...</p>}

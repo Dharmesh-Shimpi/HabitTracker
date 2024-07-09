@@ -16,7 +16,7 @@ const userSchema = new Schema({
 		type: String,
 		required: false,
 	},
-	habits: { type: [habitSchema], default: [] },
+	habits: [{ type: Schema.Types.ObjectId, ref: 'Habit' }],
 	createdAt: {
 		type: Date,
 		default: Date.now,

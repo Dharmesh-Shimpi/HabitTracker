@@ -7,19 +7,13 @@ export const habitSchema = new Schema({
 		required: true,
 	},
 	weeklyGoal: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 	calendar: [
 		{
-			date: {
-				type: String,
-				required: true,
-			},
-			status: {
-				type: Boolean,
-				default: false,
-			},
+			type: Schema.Types.ObjectId,
+			ref: 'Calendar',
 		},
 	],
 	dailyStreak: {

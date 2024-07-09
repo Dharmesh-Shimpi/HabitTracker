@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
 	googleOauth,
-	resetError,
-	resetSuccess,
-} from '../../../Redux/Oauth.redux';
+} from '../../../Redux/auth.redux';
 
 import css from './Oauth.callback.module.css';
 
 export function OauthCallback() {
-	const { loading, error, success } = useSelector((state) => state.oauth);
+	const { loading, error, success } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
@@ -23,7 +21,7 @@ export function OauthCallback() {
 	}, []);
 
 	useEffect(() => {
-		if (success === true) {
+		if (success) {
 			navigate('/');
 		}
 	}, [success]);	

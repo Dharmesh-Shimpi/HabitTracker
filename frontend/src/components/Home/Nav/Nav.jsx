@@ -1,13 +1,36 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Theme } from './Themes/Theme';
+import { setSuccess } from '../../../Redux/auth.redux';
+import api from '../../../utils/axios';
+
 import css from './Nav.module.css';
 
 export function Nav() {
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		try {
+			await api.get('/logout');
+			setSuccess(false);
+			navigate('/login');
+		} catch (error) {
+			console.error('Error during logout:', error);
+			alert(
+				`Error during logout: ${
+					error.response ? error.response.data.message : error.message
+				}`,
+			);
+		}
+	};
+
 	return (
 		<nav className={css.nav}>
 			<img
 				className={css.img}
-				src='../../../public/Logo.png'></img>
+				src='/Logo.png' // Use correct path or import
+				alt='Logo'
+			/>
 			<div className={css.right}>
 				<Link
 					to='/add'
@@ -16,7 +39,9 @@ export function Nav() {
 					<i className={`fa-solid fa-arrow-up ${css.i}`}></i>
 				</Link>
 				<Theme />
-				<div className={css.logout}>
+				<div
+					className={css.logout}
+					onClick={handleLogout}>
 					Logout
 					<i className={`fa-solid fa-right-from-bracket ${css.i}`}></i>
 				</div>

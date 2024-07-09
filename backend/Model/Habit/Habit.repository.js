@@ -1,76 +1,93 @@
-import HabitSchema from '../Model/Habit/Habit.model.js';
-import appError from '../Middleware/errors.js';
+import Habit from './Habit.model.js';
+import User from '../User/User.model.js';
+import appError from '../../Middleware/errors.js';
+import Calendar from './Calendar/Calendar.model.js';
 
 export default class HabitRepo {
-	static async getHabit() {
+	// Create Habit with associated calendar
+	static async createHabit({ id, desc, goal }) {
 		try {
-			return await HabitSchema.find();
-		} catch (err) {
-			throw new appError(`Error finding habits, error: ${err}`, 400);
-		}
-	}
+			const user = await User.findOne({ _id: id }).populate('habits');
+			if (!user) {
+				throw new appError(`User not found`, 404);
+			}
 
-	static async createHabit(data) {
-		try {
-			const { habit, goal } = data;
-			const calendar = this.createCalendar();
-			const newHabit = new HabitSchema({
-				name: habit,
-				weeklyGoal: goal,
-				calendar,
+			const calendarEntries = await CalendarService.createCalendar();
+			const calendarIds = calendarEntries.map((entry) => entry._id);
+
+			const newHabit = new Habit({
+				name: desc,
+				weeklyGoal: Number(goal),
+				calendar: calendarIds,
 			});
-			return newHabit;
+
+			await newHabit.save();
+			user.habits.push(newHabit._id);
+			await user.save();
+			return user.habits;
 		} catch (err) {
-			throw new appError(`Error creating Habit. Error: ${err}`, 401);
+			console.error(`Error creating habit. Error: ${err.message}`);
+			throw new appError(`Error creating habit. Error: ${err}`, 401);
 		}
 	}
 
-	static createCalendar() {
-		const months = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December',
-		];
+	// Delete a habit
+	static async deleteHabit(userId, habitId) {
+		try {
+			const user = await User.findOne({ _id: userId }).populate('habits');
+			if (!user) {
+				throw new appError(`User not found`, 404);
+			}
 
-		const days = [
-			'Sunday',
-			'Monday',
-			'Tuesday',
-			'Wednesday',
-			'Thursday',
-			'Friday',
-			'Saturday',
-		];
+			const habitIndex = user.habits.findIndex(
+				(habit) => habit._id.toString() === habitId,
+			);
+			if (habitIndex === -1) {
+				throw new appError(`Habit not found`, 404);
+			}
 
-		const today = new Date();
-		const oneYearFromNow = new Date(today);
-		oneYearFromNow.setFullYear(today.getFullYear() + 1);
+			const habit = await Habit.findById(habitId);
+			if (!habit) {
+				throw new appError(`Habit not found`, 404);
+			}
 
-		let currentDate = new Date(today);
-		const calendar = [];
+			// Remove habit from user's habits
+			user.habits.splice(habitIndex, 1);
+			await user.save();
 
-		while (currentDate < oneYearFromNow) {
-			const day = days[currentDate.getDay()];
-			const date = currentDate.getDate();
-			const month = months[currentDate.getMonth()];
-			const year = currentDate.getFullYear();
+			// Delete the habit
+			await habit.remove();
 
-			const formattedDate = `${day} ${date} ${month} ${year}`;
-			const calendarEntry = { date: formattedDate, status: false };
-			calendar.push(calendarEntry);
-
-			currentDate.setDate(currentDate.getDate() + 1);
+			return user.habits;
+		} catch (err) {
+			console.error(`Error deleting habit. Error: ${err.message}`);
+			throw new appError(`Error deleting habit. Error: ${err}`, 401);
 		}
+	}
 
-		return calendar;
+	// Update a habit
+	static async updateHabit(userId, habitId, { desc, goal }) {
+		try {
+			const user = await User.findOne({ _id: userId }).populate('habits');
+			if (!user) {
+				throw new appError(`User not found`, 404);
+			}
+
+			const habit = await Habit.findById(habitId);
+			if (!habit) {
+				throw new appError(`Habit not found`, 404);
+			}
+
+			// Update habit details
+			if (desc) habit.name = desc;
+			if (goal) habit.weeklyGoal = Number(goal);
+
+			await habit.save();
+
+			return habit;
+		} catch (err) {
+			console.error(`Error updating habit. Error: ${err.message}`);
+			throw new appError(`Error updating habit. Error: ${err}`, 401);
+		}
 	}
 }

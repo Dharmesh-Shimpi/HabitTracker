@@ -1,3 +1,4 @@
+
 .themeDiv {
 	align-items: center;
 	padding: 0.7rem;
@@ -15,8 +16,9 @@
 }
 
 .On {
+	z-index: 50;
 	position: absolute;
-	right: 5rem;
+	right: 3rem;	
 	top: 7rem;
 	width: 20rem;
 	height: 15rem;
@@ -26,13 +28,15 @@
 	border: 2px var(--color) solid;
 	border-radius: 0.5rem;
 	overflow-y: scroll;
+	backdrop-filter: blur(1rem);
+	box-shadow: 3px 3px 0px 1px #ff6200;
 }
 
 .Off {
 	display: none;
 }
 
-ul {
+.ul {
 	margin: 1.5rem;
 }
 
@@ -40,7 +44,7 @@ ul {
 	font-size: xx-large;
 }
 
-li {
+.li {
 	border-radius: 0.5rem;
 	transition-property: box-shadow, transform;
 	transition-duration: 0.2s;
@@ -48,7 +52,7 @@ li {
 	margin: 0.5rem;
 }
 
-li:hover {
+.li:hover {
 	cursor: pointer;
 	box-shadow: 3px 3px 0px 1px #ff6200;
 	transform: translateY(0.1rem);

@@ -1,10 +1,10 @@
+// Register.js
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	registerUser,
-	resetSuccess,
-	resetError,
-} from '../../../Redux/register.redux';
+	setSuccess
+} from '../../../Redux/auth.redux'; // 
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../Oauth/Oauth';
 
@@ -13,7 +13,7 @@ import css from './Register.module.css';
 export function Register() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { loading, error, success } = useSelector((state) => state.register);
+	const { loading, error, success } = useSelector((state) => state.auth); 
 	const [email, setEmail] = useState('');
 	const [name, setName] = useState('');
 	const [password, setPassword] = useState('');
@@ -23,16 +23,18 @@ export function Register() {
 		dispatch(registerUser({ name, email, password }));
 	};
 
-	if (success) {
-		dispatch(resetSuccess());
-		navigate('/login');
-	}
+	useEffect(() => {
+		if (success) {
+			dispatch(setSuccess(false))
+			navigate('/login');
+		}
+	}, [success, dispatch, navigate]);
 
 	return (
 		<div className={css.container}>
 			<h2>Register</h2>
 			<form
-				onSubmit={(e) => handleSubmit(e)}
+				onSubmit={handleSubmit}
 				className={css.form}>
 				<div className={css['form-group']}>
 					<label htmlFor='name'>Name: </label>
@@ -84,7 +86,7 @@ export function Register() {
 				</p>
 				<p className={css.dist}>OR</p>
 			</form>
-			<OAuth /> 
+			<OAuth />
 		</div>
 	);
 }

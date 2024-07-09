@@ -1,15 +1,18 @@
-import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createHabitsThunk } from '../../../../Redux/Habit.redux';
 import css from './Input.module.css';
 
 export function Input() {
-	const { name, email } = useSelector((state) => state.login);
+	const dispatch = useDispatch();
 	const descInput = useRef();
 	const goals = useRef();
+
 	function submit(e) {
 		e.preventDefault();
-		const { description } = descInput.current;
-		const { value } = goals.current;
+		const desc = descInput.current.value;
+		const goal = goals.current.value;
+		dispatch(createHabitsThunk({ desc, goal }));
 	}
 
 	return (
@@ -37,3 +40,5 @@ export function Input() {
 		</form>
 	);
 }
+
+export default Input;

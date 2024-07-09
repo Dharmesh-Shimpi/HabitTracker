@@ -4,12 +4,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import { Home } from './components/Home/Home';
-import { Tracker } from './components/Tracker/Tracker';
-import { Input } from './components/Home/Nav/Input/Input';
+import { Tracker } from './components/Home/Tracker/Tracker';
+import { Input } from './components/Home/Habits/Input/Input';
 import { Register } from './components/Users/Register/Register';
 import { Login } from './components/Users/LogIn/Login';
 import { OauthCallback } from './components/Users/Oauth/Oauth.callback';
-import ProtectedRoute from '../utils/ProtectedRoute';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 const container = document.getElementById('root');
 const root = createRoot(container);

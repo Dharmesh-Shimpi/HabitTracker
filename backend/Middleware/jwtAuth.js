@@ -1,46 +1,24 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import jwt from 'jsonwebtoken';
-import appError from './errors.js';
 
-export function generateToken(payload) {
-	const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-		expiresIn: '1h',
-	});
-	console.log(token);
-	return token;
-}
-
-export function verify(req, res, next) {
-	const token = req.cookies.token;
-	const OauthToken = req.cookies.OauthToken;
-	if (OauthToken) res.status(200);
-	if (token) {
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			req.user = decoded;
-			res.status(200);
-		} catch (err) {
-			throw new appError('Invalid token', 401);
-		}
+export default class Auth {
+	static generateToken(payload) {
+		const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+			expiresIn: '1h',
+		});
+		return token;
 	}
 
-	throw new appError('No token provided', 401);
-}
-
-export function auth(req, res, next) {
-	const token = req.cookies.token;
-	const OauthToken = req.cookies.OauthToken;
-	if (OauthToken) next();
-	if (token) {
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			req.user = decoded;
-			next();
-		} catch (err) {
-			throw new appError('Invalid token', 401);
+	static verify(req, res) {
+		console.log('reached verify function');
+		const token = req.cookies
+		const id = req.cookies;
+		console.log(token, id);
+		if (token) {
+			res.json({ isVerified: true });
+		} else {
+			res.json({ isVerified: false });
 		}
 	}
-
-	throw new appError('No token provided', 401);
 }

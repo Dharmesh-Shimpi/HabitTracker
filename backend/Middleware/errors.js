@@ -1,16 +1,12 @@
-export default class appError {
+export default class appError extends Error {
 	constructor(message, status) {
-		this.message = message;
+		super(message); 
 		this.status = status;
 	}
-}
 
-export function error(err, req, res, next) {
-	if (err) {
+	static error(err, req, res, next) {
 		if (err instanceof appError) {
-			res.status(err.status).send(err.message);
-		} else {
-			res.status(500).send('Internal server error');
+			res.status(err.status).json({ error: err.message });
 		}
 	}
 }

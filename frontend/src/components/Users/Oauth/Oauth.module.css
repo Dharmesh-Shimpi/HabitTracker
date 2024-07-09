@@ -1,16 +1,19 @@
 .google {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #4285F4;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    border: none;
+	width: 100%;
+	border: 1px solid var(--color);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 20px;
+	background-color: #4285f4;
+	color: white;
+	cursor: pointer;
+	border-radius: 5px;
+	border: none;
 }
 
 .i {
-    padding-right: 10px;
+	padding-right: 10px;
+	
 }
+

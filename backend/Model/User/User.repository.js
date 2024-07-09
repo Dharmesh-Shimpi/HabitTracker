@@ -1,6 +1,6 @@
 import UserSchema from './User.model.js';
 import { hashPassword, verifyPassword } from '../../Middleware/bcrypt.js';
-import { generateToken } from '../../Middleware/jwtAuth.js';
+import Auth from '../../Middleware/jwtAuth.js';
 import appError from '../../Middleware/errors.js';
 
 export default class UserRepo {
@@ -14,10 +14,9 @@ export default class UserRepo {
 				passwordHash: hashedPassword,
 			});
 			await newUser.save();
-			console.log(newUser);
 			return newUser;
 		} catch (err) {
-			console.log(err);
+			console.log(err.message);
 			throw new appError('Error registering User', 401);
 		}
 	}
@@ -32,8 +31,8 @@ export default class UserRepo {
 		if (!verifiedPassword) {
 			throw new appError('Password is Incorrect', 401);
 		}
-		const token = generateToken({ userId: user._id, email });
-		return { token, id: user._id, name: user.username, email };
+		const token = Auth.generateToken({ userId: user._id });
+		return { token, id: user._id };
 	}
 
 	static async registerOauthUser(data) {
@@ -46,7 +45,7 @@ export default class UserRepo {
 				email,
 			});
 			await newUser.save();
-			return { name, email };
+			return newUser;
 		} catch (err) {
 			console.log(err);
 			throw new appError('Error creating Oauth User', 401);

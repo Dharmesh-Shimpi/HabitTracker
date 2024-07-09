@@ -1,11 +1,11 @@
-import UserModel from '../Model/User/User.model.js';
+import UserModel from '../Model/User/User.repository.js';
 import Oauth from '../Middleware/Oauth.js';
 
 export default class UserController {
 	static async register(req, res, next) {
 		try {
-			const newUser = await UserModel.registerUser(req.body);
-			res.status(201).json(newUser);
+			await UserModel.registerUser(req.body);
+			res.sendStatus(201);
 		} catch (err) {
 			next(err);
 		}
@@ -13,15 +13,21 @@ export default class UserController {
 
 	static async login(req, res, next) {
 		try {
-			const { token, name, email } = await UserModel.loginUser(req.body);
+			const { id, token } = await UserModel.loginUser(req.body);
+
 			res.cookie('token', token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
 				sameSite: 'strict',
 				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
-
-			res.json({ name, email });
+			res.cookie('id', id, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'strict',
+				maxAge: 24 * 60 * 60 * 1000, // 1 day
+			});
+			res.sendStatus(200);
 		} catch (err) {
 			next(err);
 		}
@@ -31,31 +37,28 @@ export default class UserController {
 		try {
 			const { code } = req.body;
 			const { access_token } = await Oauth.signup(code);
-			res.cookie('OauthToken', access_token, {
+			const userInfo = await Oauth.getUserInfo(access_token);
+
+			res.cookie('token', access_token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
 				sameSite: 'strict',
 				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
-			const userInfo = await Oauth.getUserInfo(access_token);
-			console.log(userInfo);
-			const newUser = await UserModel.registerOauthUser(userInfo);
-			res.json({ newUser });
+			
+			const user = await UserModel.registerOauthUser(userInfo);
+			console.log(user);
+			res.cookie('id', user._id, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'strict',
+				maxAge: 24 * 60 * 60 * 1000, // 1 day
+			});
+			res.sendStatus(200);
 		} catch (err) {
 			next(err);
 		}
 	}
-
-	// static async OauthLogin(req, res, next) {
-	// 	try {
-	// 		const access_token = req.cookie.OauthToken
-	// 		const userInfo = await Oauth.getUserInfo(access_token);
-	// 		const newUser = await UserModel.registerOauthUser(userInfo);
-	// 		res.json({ newUser });
-	// 	} catch (err) {
-	// 		next(err);
-	// 	}
-	// }
 
 	static getOauthURL(req, res, next) {
 		try {
@@ -64,5 +67,13 @@ export default class UserController {
 		} catch (err) {
 			next(err);
 		}
+	}
+
+	static logOut(req, res) {
+		res.clearCookie('token');
+		res.clearCookie('email');
+		res.clearCookie('id');
+		req.user = null;
+		res.sendStatus(200);
 	}
 }

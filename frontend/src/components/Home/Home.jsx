@@ -9,8 +9,8 @@ export function Home() {
 	return (
 		<div className={css.body}>
 			<Nav />
-			<Habits />
 			<div className={css.main}>
+				<Habits />
 				<Outlet />
 			</div>
 		</div>

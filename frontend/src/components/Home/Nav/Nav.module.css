@@ -6,8 +6,12 @@
 	text-align: center;
 	height: 6rem;
 	width: 100%;
-	border-bottom: 2px var(--color) solid;
+	/* border-bottom: 2px var(--color) solid; */
 	padding-left: 5rem;
+	z-index: 5;
+	box-shadow: 0 0 10px var(--color);
+	backdrop-filter: blur(.3rem);
+	/* border: 2px var(--color) solid; */
 }
 
 .img {
