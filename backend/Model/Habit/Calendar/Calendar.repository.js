@@ -1,4 +1,4 @@
-import appError from '../../../Middleware/errors';
+import appError from '../../../Middleware/errors.js';
 import Calendar from './Calendar.model.js';
 
 const months = [
@@ -46,7 +46,7 @@ export default class CalendarRepo{
 				month,
 				day,
 				date,
-				last: months[(currentDate.getMonth() - 1 + 12) % 12], // Getting previous month
+				last: months[(currentDate.getMonth() - 1 + 12) % 12],
 				done: false, 
 				user: userId, 
 			};

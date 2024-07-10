@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { habitSchema } from '../Habit/Habit.model.js';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({

@@ -1,24 +1,26 @@
 import Habit from './Habit.model.js';
 import User from '../User/User.model.js';
 import appError from '../../Middleware/errors.js';
-import Calendar from './Calendar/Calendar.model.js';
+import Calendar from './Calendar/Calendar.repository.js'; 
 
 export default class HabitRepo {
 	// Create Habit with associated calendar
-	static async createHabit({ id, desc, goal }) {
+	static async createHabit({ id, desc, goal, category, customCategory }) {
 		try {
 			const user = await User.findOne({ _id: id }).populate('habits');
 			if (!user) {
 				throw new appError(`User not found`, 404);
 			}
 
-			const calendarEntries = await CalendarService.createCalendar();
+			const calendarEntries = await Calendar.createCalendar();
 			const calendarIds = calendarEntries.map((entry) => entry._id);
 
 			const newHabit = new Habit({
 				name: desc,
 				weeklyGoal: Number(goal),
 				calendar: calendarIds,
+				category,
+				customCategory: category === 'Other' ? customCategory : undefined,
 			});
 
 			await newHabit.save();
@@ -51,11 +53,9 @@ export default class HabitRepo {
 				throw new appError(`Habit not found`, 404);
 			}
 
-			// Remove habit from user's habits
 			user.habits.splice(habitIndex, 1);
 			await user.save();
-
-			// Delete the habit
+	
 			await habit.remove();
 
 			return user.habits;
@@ -66,7 +66,11 @@ export default class HabitRepo {
 	}
 
 	// Update a habit
-	static async updateHabit(userId, habitId, { desc, goal }) {
+	static async updateHabit(
+		userId,
+		habitId,
+		{ desc, goal, category, customCategory },
+	) {
 		try {
 			const user = await User.findOne({ _id: userId }).populate('habits');
 			if (!user) {
@@ -81,6 +85,12 @@ export default class HabitRepo {
 			// Update habit details
 			if (desc) habit.name = desc;
 			if (goal) habit.weeklyGoal = Number(goal);
+			if (category) habit.category = category;
+			if (category === 'Other' && customCategory) {
+				habit.customCategory = customCategory;
+			} else if (category !== 'Other') {
+				habit.customCategory = undefined;
+			}
 
 			await habit.save();
 
