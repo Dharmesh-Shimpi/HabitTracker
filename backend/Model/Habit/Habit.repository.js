@@ -1,11 +1,11 @@
 import Habit from './Habit.model.js';
 import User from '../User/User.model.js';
 import appError from '../../Middleware/errors.js';
-import Calendar from './Calendar/Calendar.repository.js'; 
+import Calendar from './Calendar.repository.js';
 
 export default class HabitRepo {
 	// Create Habit with associated calendar
-	static async createHabit({ id, desc, goal, category, customCategory }) {
+	static async createHabit({ id, desc, goal }) {
 		try {
 			const user = await User.findOne({ _id: id }).populate('habits');
 			if (!user) {
@@ -55,7 +55,7 @@ export default class HabitRepo {
 
 			user.habits.splice(habitIndex, 1);
 			await user.save();
-	
+
 			await habit.remove();
 
 			return user.habits;

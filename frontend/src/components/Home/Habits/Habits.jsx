@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Streak } from './Streak/Streak';
+import { Streak } from '../Main/Streak/Streak';
 import { getHabitsThunk, setStatus } from '../../../Redux/Habit.redux';
 import css from './Habits.module.css';
 

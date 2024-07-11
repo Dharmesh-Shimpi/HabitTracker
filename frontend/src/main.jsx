@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import { Home } from './components/Home/Home';
-import { Tracker } from './components/Home/Tracker/Tracker';
+import { Calendar } from './components/Home/Main/Calendar/Calendar';
 import { Input } from './components/Home/Habits/Input/Input';
 import { Register } from './components/Users/Register/Register';
 import { Login } from './components/Users/LogIn/Login';
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: ':id',
-				element: <Tracker />,
+				element: <Calendar />,
 			},
 			{
 				path: 'add',

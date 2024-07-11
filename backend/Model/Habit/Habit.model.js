@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-
-const categories = [
+export const categories = [
 	'Physical Activities',
 	'Meditation',
 	'Creative Tasks',
@@ -13,6 +12,7 @@ const categories = [
 	'Eco-Friendly Tasks',
 	'Digital Management',
 	'Reading',
+	'Other',
 ];
 
 const habitSchema = new Schema({
@@ -20,46 +20,29 @@ const habitSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	category: {
-		type: String,
-		enum: [...categories, 'Other'], 
-		required: true,
-	},
-	customCategory: {
-		type: String,
-		required: function () {
-			return this.category === 'Other'; //
-		},
-	},
+
 	weeklyGoal: {
 		type: String,
 		required: true,
 	},
+
 	calendar: [
 		{
-			type: Schema.Types.ObjectId,
-			ref: 'Calendar',
+			type: Object,
+			required: true,
 		},
 	],
-	dailyStreak: {
+
+	currentStreak: {
 		type: Number,
 		default: 0,
+		required: true,
 	},
-	goalStreak: {
+
+	maxStreak: {
 		type: Number,
 		default: 0,
-	},
-	monthlyStreak: {
-		type: Number,
-		default: 0,
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now,
-	},
-	updatedAt: {
-		type: Date,
-		default: Date.now,
+		required: true,
 	},
 });
 

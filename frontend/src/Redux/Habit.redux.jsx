@@ -3,7 +3,6 @@ import api from '../utils/axios';
 
 const initialState = {
 	habits: [],
-	calendar: [],
 	loading: false,
 	error: null,
 	status: false,

@@ -1,5 +1,4 @@
 import Habit from '../Model/Habit/Habit.repository.js';
-import { Streak, Award } from '../Model/Habit/Steaks/Streaks.model.js';
 
 export default class HabitController {
 	// Get habits for the current user
@@ -21,7 +20,7 @@ export default class HabitController {
 	static async createHabit(req, res, next) {
 		try {
 			const id = req.cookies.id;
-			const { desc, goal } = req.body;
+			const { desc, goal, category, customCategory } = req.body;
 
 			if (!id || !desc || !goal) {
 				return res
@@ -29,7 +28,13 @@ export default class HabitController {
 					.json({ message: 'User ID, description, and goal are required' });
 			}
 
-			const newHabit = await Habit.createHabit({ id, desc, goal });
+			const newHabit = await Habit.createHabit({
+				id,
+				desc,
+				goal,
+				category,
+				customCategory,
+			});
 			res.status(201).json({ newHabit });
 		} catch (err) {
 			next(err);
@@ -41,16 +46,21 @@ export default class HabitController {
 		try {
 			const id = req.cookies.id;
 			const habitId = req.params.habitId;
-			const { desc, goal } = req.body;
+			const { desc, goal, category, customCategory } = req.body;
 
-			if (!id || !habitId || (!desc && !goal)) {
+			if (!id || !habitId || (!desc && !goal && !category && !customCategory)) {
 				return res.status(400).json({
 					message:
-						'User ID, habit ID, and at least one field (description or goal) are required',
+						'User ID, habit ID, and at least one field (description, goal, category, or customCategory) are required',
 				});
 			}
 
-			const updatedHabit = await Habit.updateHabit({ id, habitId, desc, goal });
+			const updatedHabit = await Habit.updateHabit(id, habitId, {
+				desc,
+				goal,
+				category,
+				customCategory,
+			});
 			if (!updatedHabit) {
 				return res.status(404).json({ message: 'Habit not found' });
 			}
@@ -84,70 +94,4 @@ export default class HabitController {
 		}
 	}
 
-	// Get all streaks
-	static async getStreaks(req, res, next) {
-		try {
-			const streaks = await Streak.find();
-			res.json({ streaks });
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	// Create a new streak
-	static async createStreak(req, res, next) {
-		try {
-			const { name, description, type, requiredStreak } = req.body;
-
-			if (!name || !type || !requiredStreak) {
-				return res
-					.status(400)
-					.json({ message: 'Name, type, and required streak are required' });
-			}
-
-			const newStreak = new Streak({
-				name,
-				description,
-				type,
-				requiredStreak,
-			});
-
-			await newStreak.save();
-			res.status(201).json({ newStreak });
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	// Get all awards
-	static async getAwards(req, res, next) {
-		try {
-			const awards = await Award.find();
-			res.json({ awards });
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	// Create a new award
-	static async createAward(req, res, next) {
-		try {
-			const { name, description, type } = req.body;
-
-			if (!name || !type) {
-				return res.status(400).json({ message: 'Name and type are required' });
-			}
-
-			const newAward = new Award({
-				name,
-				description,
-				type,
-			});
-
-			await newAward.save();
-			res.status(201).json({ newAward });
-		} catch (err) {
-			next(err);
-		}
-	}
 }
