@@ -20,18 +20,18 @@ export default class HabitController {
 	static async createHabit(req, res, next) {
 		try {
 			const id = req.cookies.id;
-			const { desc, goal, category, customCategory } = req.body;
+			const { name, weeklyGoal, category, customCategory } = req.body;
 
-			if (!id || !desc || !goal) {
+			if (!id || !name || !weeklyGoal) {
 				return res
 					.status(400)
-					.json({ message: 'User ID, description, and goal are required' });
+					.json({ message: 'User ID, name, and weekly goal are required' });
 			}
 
 			const newHabit = await Habit.createHabit({
 				id,
-				desc,
-				goal,
+				name,
+				weeklyGoal,
 				category,
 				customCategory,
 			});
@@ -46,18 +46,22 @@ export default class HabitController {
 		try {
 			const id = req.cookies.id;
 			const habitId = req.params.habitId;
-			const { desc, goal, category, customCategory } = req.body;
+			const { name, weeklyGoal, category, customCategory } = req.body;
 
-			if (!id || !habitId || (!desc && !goal && !category && !customCategory)) {
+			if (
+				!id ||
+				!habitId ||
+				(!name && !weeklyGoal && !category && !customCategory)
+			) {
 				return res.status(400).json({
 					message:
-						'User ID, habit ID, and at least one field (description, goal, category, or customCategory) are required',
+						'User ID, habit ID, and at least one field (name, weekly goal, category, or customCategory) are required',
 				});
 			}
 
 			const updatedHabit = await Habit.updateHabit(id, habitId, {
-				desc,
-				goal,
+				name,
+				weeklyGoal,
 				category,
 				customCategory,
 			});
@@ -93,5 +97,4 @@ export default class HabitController {
 			next(err);
 		}
 	}
-
 }

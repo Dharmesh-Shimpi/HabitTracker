@@ -8,25 +8,50 @@ const initialState = {
 	status: false,
 };
 
-export const getHabitsThunk = createAsyncThunk('getHabits', async () => {
+export const getHabitsThunk = createAsyncThunk('habits/getHabits', async () => {
 	try {
 		const response = await api.get('/habits');
-		console.log(response.data.habits);
 		return response.data.habits;
 	} catch (err) {
-		return err.response.data;
+		throw new Error(err.response.data.message);
 	}
 });
 
 export const createHabitsThunk = createAsyncThunk(
-	'createHabits',
+	'habits/createHabits',
 	async (data, { dispatch }) => {
 		try {
 			const response = await api.post('/habits', data);
-			dispatch(getHabitsThunk()); 
+			dispatch(getHabitsThunk()); // Refresh the list of habits
+			return response.data.newHabit;
+		} catch (err) {
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const markDateAsDoneThunk = createAsyncThunk(
+	'habits/markDateAsDone',
+	async ({ habitId, date }, { dispatch }) => {
+		try {
+			const response = await api.patch(`/habits/${habitId}/markDateAsDone`, date);
+			dispatch(getHabitsThunk()); // Refresh the list of habits
 			return response.data;
 		} catch (err) {
-			return err.response.data;
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const updateStreakThunk = createAsyncThunk(
+	'habits/updateStreak',
+	async ({ habitId, date }, { dispatch }) => {
+		try {
+			const response = await api.patch(`/habits/${habitId}/updateStreak`, date);
+			dispatch(getHabitsThunk()); // Refresh the list of habits
+			return response.data;
+		} catch (err) {
+			throw new Error(err.response.data.message);
 		}
 	},
 );
@@ -35,12 +60,9 @@ const habitsSlice = createSlice({
 	name: 'habits',
 	initialState,
 	reducers: {
-		setStatus: (state) => {
-			state.status = false;
+		setStatus: (state, action) => {
+			state.status = action.payload;
 		},
-		// setGoal: (state, action) {
-		// 	state.habits.wee
-		// }
 	},
 	extraReducers: (builder) => {
 		builder
@@ -66,7 +88,29 @@ const habitsSlice = createSlice({
 			})
 			.addCase(createHabitsThunk.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload;
+				state.error = action.error.message;
+			})
+			.addCase(markDateAsDoneThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(markDateAsDoneThunk.fulfilled, (state) => {
+				state.loading = false;
+			})
+			.addCase(markDateAsDoneThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(updateStreakThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(updateStreakThunk.fulfilled, (state) => {
+				state.loading = false;
+			})
+			.addCase(updateStreakThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
 			});
 	},
 });

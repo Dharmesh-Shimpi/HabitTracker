@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-export const categories = [
+const categories = [
 	'Physical Activities',
 	'Meditation',
 	'Creative Tasks',
@@ -25,14 +25,7 @@ const habitSchema = new Schema({
 		type: String,
 		required: true,
 	},
-
-	calendar: [
-		{
-			type: Object,
-			required: true,
-		},
-	],
-
+	
 	currentStreak: {
 		type: Number,
 		default: 0,

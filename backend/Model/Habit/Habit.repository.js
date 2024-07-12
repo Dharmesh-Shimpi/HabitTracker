@@ -1,42 +1,51 @@
 import Habit from './Habit.model.js';
 import User from '../User/User.model.js';
 import appError from '../../Middleware/errors.js';
-import Calendar from './Calendar.repository.js';
+import CalendarRepo from './Calendar.repository.js';
 
 export default class HabitRepo {
 	// Create Habit with associated calendar
-	static async createHabit({ id, desc, goal }) {
+	static async createHabit({
+		userId,
+		name,
+		weeklyGoal,
+		category,
+		customCategory,
+	}) {
 		try {
-			const user = await User.findOne({ _id: id }).populate('habits');
+			const user = await User.findById(userId).populate('habits');
 			if (!user) {
 				throw new appError(`User not found`, 404);
 			}
 
-			const calendarEntries = await Calendar.createCalendar();
-			const calendarIds = calendarEntries.map((entry) => entry._id);
-
 			const newHabit = new Habit({
-				name: desc,
-				weeklyGoal: Number(goal),
-				calendar: calendarIds,
+				name,
+				weeklyGoal,
 				category,
 				customCategory: category === 'Other' ? customCategory : undefined,
 			});
 
-			await newHabit.save();
-			user.habits.push(newHabit._id);
+			const savedHabit = await newHabit.save();
+			user.habits.push(savedHabit._id);
 			await user.save();
+
+			const calendarEntries = await CalendarRepo.createCalendar(
+				userId,
+				savedHabit._id,
+			);
+			savedHabit.calendar = calendarEntries.map((entry) => entry._id);
+			await savedHabit.save();
+
 			return user.habits;
 		} catch (err) {
-			console.error(`Error creating habit. Error: ${err.message}`);
-			throw new appError(`Error creating habit. Error: ${err}`, 401);
+			throw new appError(`Error creating habit. Error: ${err.message}`, 401);
 		}
 	}
 
 	// Delete a habit
 	static async deleteHabit(userId, habitId) {
 		try {
-			const user = await User.findOne({ _id: userId }).populate('habits');
+			const user = await User.findById(userId).populate('habits');
 			if (!user) {
 				throw new appError(`User not found`, 404);
 			}
@@ -56,12 +65,12 @@ export default class HabitRepo {
 			user.habits.splice(habitIndex, 1);
 			await user.save();
 
+			await Calendar.deleteMany({ habitId });
 			await habit.remove();
 
 			return user.habits;
 		} catch (err) {
-			console.error(`Error deleting habit. Error: ${err.message}`);
-			throw new appError(`Error deleting habit. Error: ${err}`, 401);
+			throw new appError(`Error deleting habit. Error: ${err.message}`, 401);
 		}
 	}
 
@@ -69,10 +78,10 @@ export default class HabitRepo {
 	static async updateHabit(
 		userId,
 		habitId,
-		{ desc, goal, category, customCategory },
+		{ name, weeklyGoal, category, customCategory },
 	) {
 		try {
-			const user = await User.findOne({ _id: userId }).populate('habits');
+			const user = await User.findById(userId).populate('habits');
 			if (!user) {
 				throw new appError(`User not found`, 404);
 			}
@@ -83,8 +92,8 @@ export default class HabitRepo {
 			}
 
 			// Update habit details
-			if (desc) habit.name = desc;
-			if (goal) habit.weeklyGoal = Number(goal);
+			if (name) habit.name = name;
+			if (weeklyGoal) habit.weeklyGoal = weeklyGoal;
 			if (category) habit.category = category;
 			if (category === 'Other' && customCategory) {
 				habit.customCategory = customCategory;
@@ -96,8 +105,7 @@ export default class HabitRepo {
 
 			return habit;
 		} catch (err) {
-			console.error(`Error updating habit. Error: ${err.message}`);
-			throw new appError(`Error updating habit. Error: ${err}`, 401);
+			throw new appError(`Error updating habit. Error: ${err.message}`, 401);
 		}
 	}
 }

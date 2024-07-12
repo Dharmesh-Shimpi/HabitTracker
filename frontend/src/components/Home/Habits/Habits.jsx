@@ -7,7 +7,9 @@ import css from './Habits.module.css';
 
 export function Habits() {
 	const dispatch = useDispatch();
-	const { habits, error, loading, status } = useSelector((state) => state.habit);
+	const { habits, error, loading, status } = useSelector(
+		(state) => state.habits,
+	);
 
 	useEffect(() => {
 		dispatch(getHabitsThunk());
@@ -26,22 +28,18 @@ export function Habits() {
 				<h1 className={css.h}>Habits</h1>
 				{loading && <p>Loading...</p>}
 				{error && <p>Error: {error}</p>}
+				{!loading && !error && !habits && <p>No habits found</p>}
 				<ul className={css.ul}>
-					{/* {habits !== undefined || habits !== null ? (
+					{habits &&
+						habits.length > 0 &&
 						habits.map((data, i) => (
 							<Link
-								to={`/${data.id}`}
-								className={css.link}>
-								<li
-									key={i}
-									className={css.li}>
-									{data.name}
-								</li>
+									to={`/${data.id}`}
+								className={css.link}
+								key={data.id}>
+								<li className={css.li}>{data.name}</li>
 							</Link>
-						))
-					) : (
-						<p>No habits found</p>
-					)} */}
+						))}
 				</ul>
 			</div>
 			<Streak />

@@ -1,7 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { fetchTrackerByIdThunk, updateHabitThunk } from '../store/habitsSlice';
+import {
+	fetchCalendarByIdThunk,
+	markDateAsDoneThunk,
+	getMonthThunk,
+	getAdjacentMonthThunk,
+} from '../../../../Redux/Calendar.redux';
 import css from './Calendar.module.css';
 
 export function Calendar() {
@@ -9,59 +14,100 @@ export function Calendar() {
 	const dispatch = useDispatch();
 	const [visibleButtonIndex, setVisibleButtonIndex] = useState(null);
 
-	const habit = useSelector((state) => state.habits.habit);
-	const tracker = useSelector((state) => state.habits.tracker);
+	// Fetch the habit using `id`
+	const habit = useSelector(
+		(state) => state.habits.habits.find((h) => h._id === id), // Assuming `id` is `_id` in the habit object
+	);
+
+	// Get calendar data from Redux state
+	const calendar = useSelector((state) => state.calendar.calendar);
 
 	useEffect(() => {
-		if (habit && habit.tracker) {
-			dispatch(fetchTrackerByIdThunk(habit.tracker));
+		if (id) {
+			dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })); // Adjust the userId as needed
 		}
-	}, [dispatch, habit]);
+	}, [dispatch, id]);
+
+	const handleMarkDateAsDone = (date) => {
+		dispatch(markDateAsDoneThunk({ habitId: id, date }))
+			.then(() =>
+				dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })),
+			) // Fetch updated calendar data
+			.catch((error) => console.error('Failed to mark date as done:', error));
+	};
+
+	const handleStreakUpdate = (date) => {
+		dispatch(updateStreakThunk({ habitId: id, date }))
+			.then(() =>
+				dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })),
+			) // Fetch updated calendar data
+			.catch((error) => console.error('Failed to update streak:', error));
+	};
+
+	const handleDivClick = (index) => {
+		setVisibleButtonIndex(visibleButtonIndex === index ? null : index);
+	};
+
+	const handlePrevMonth = () => {
+		const month = new Date(calendar[0]?.date).toLocaleString('default', {
+			month: 'long',
+		});
+		const year = new Date(calendar[0]?.date).getFullYear();
+		dispatch(
+			getAdjacentMonthThunk({
+				habitId: id,
+				userId: 'someUserId',
+				year,
+				month,
+				direction: 'prev',
+			}),
+		);
+	};
+
+	const handleNextMonth = () => {
+		const month = new Date(calendar[0]?.date).toLocaleString('default', {
+			month: 'long',
+		});
+		const year = new Date(calendar[0]?.date).getFullYear();
+		dispatch(
+			getAdjacentMonthThunk({
+				habitId: id,
+				userId: 'someUserId',
+				year,
+				month,
+				direction: 'next',
+			}),
+		);
+	};
 
 	if (!habit) {
 		return <div>Habit not found</div>;
 	}
 
-	if (tracker.length === 0) {
+	if (!calendar.length) {
 		return <div>Loading...</div>;
 	}
 
-	const monthYear = tracker[0].date.split(' ');
+	const monthYear = calendar[0].date.split(' ');
 	const month = monthYear[1];
 	const year = monthYear[3];
 
-	function handleUpdate(date, value) {
-		dispatch(updateHabitThunk({ habitId: id, date, value }))
-			.then(() => {
-				setVisibleButtonIndex(null);
-			})
-			.then(() => {
-				if (habit && habit.tracker) {
-					dispatch(fetchTrackerByIdThunk(habit.tracker));
-				}
-			});
-	}
-
-	function handleDiv(index) {
-		setVisibleButtonIndex(visibleButtonIndex === index ? null : index);
-	}
-
 	return (
 		<div>
-			<h3>{habit.habit}</h3>
-			{monthYear && (
-				<div className='monthYear'>
-					{month} {year}
-				</div>
-			)}
+			<h3>{habit.name}</h3>
+			<div className='monthYear'>
+				<button onClick={handlePrevMonth}>Previous</button>
+				{month} {year}
+				<button onClick={handleNextMonth}>Next</button>
+			</div>
 			<div className={css.calendarContainer}>
-				{tracker.map((entry, i) => {
+				{calendar.map((entry, i) => {
 					const [day, , date] = entry.date.split(' ');
 					return (
 						<div
 							className={css.dateDiv}
 							key={i}
-							onClick={() => handleDiv(i)}>
+							onClick={() => handleDivClick(i)}>
 							<span className={css.date}>
 								{day}, {date}
 							</span>
@@ -75,13 +121,13 @@ export function Calendar() {
 										className='fa-solid fa-check'
 										onClick={(e) => {
 											e.stopPropagation();
-											handleUpdate(entry.date, 1);
+											handleMarkDateAsDone(entry.date);
 										}}></i>
 									<i
 										className='fa-solid fa-xmark'
 										onClick={(e) => {
 											e.stopPropagation();
-											handleUpdate(entry.date, -1);
+											handleStreakUpdate(entry.date);
 										}}></i>
 								</div>
 							)}

@@ -1,43 +1,45 @@
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-
-import { fetchStreaks, fetchAwards } from '../../redux/streakSlice';
+import { fetchCalendarByIdThunk } from '../../../../Redux/Calendar.redux';
 import css from './Streak.module.css';
 
 export function Streak() {
+	const { id } = useParams();
 	const dispatch = useDispatch();
-	const {
-		streaks,
-		status: streakStatus,
-		error: streakError,
-	} = useSelector((state) => state.streaks);
-	const {
-		awards,
-		status: awardStatus,
-		error: awardError,
-	} = useSelector((state) => state.streaks); // Fetch from the same state for simplicity
+
+	// Get the habit and its calendar from the Redux store
+	const habit = useSelector((state) =>
+		state.habits.habits?.find((h) => h.id === id),
+	);
 
 	useEffect(() => {
-		dispatch(fetchStreaks());
-		dispatch(fetchAwards());
-	}, [dispatch]);
+		if (id) {
+			dispatch(fetchCalendarByIdThunk(id));
+		}
+	}, [dispatch, id]);
 
-	if (streakStatus === 'loading' || awardStatus === 'loading') {
-		return <div>Loading...</div>;
+	if (!habit) {
+		return <div>No Streak Found</div>;
 	}
 
-	if (streakStatus === 'failed') {
-		return <div>{streakError}</div>;
-	}
-
-	if (awardStatus === 'failed') {
-		return <div>{awardError}</div>;
-	}
+	// Calculate the current streak and max streak from the habit object
+	const currentStreak = habit.currentStreak || 0;
+	const maxStreak = habit.maxStreak || 0;
 
 	return (
 		<div className={css.body}>
-			<h1></h1>
+			<h1>Streaks</h1>
+			<div className={css.streakContainer}>
+				<div className={css.streakItem}>
+					<h2>Current Streak</h2>
+					<p>{currentStreak} days</p>
+				</div>
+				<div className={css.streakItem}>
+					<h2>Max Streak</h2>
+					<p>{maxStreak} days</p>
+				</div>
+			</div>
 		</div>
-
 	);
 }

@@ -1,101 +1,158 @@
-import CalendarRepo from '../Model/Habit/Calendar/Calendar.repository.js';
+import CalendarRepo from '../Model/Habit/Calendar.repository.js';
+import appError from '../Middleware/errors.js';
 
 export default class CalendarController {
-	// Get current month's calendar entries for the user
-	static async getCalendar(req, res, next) {
-		try {
-			const userId = req.cookies.id;
-			if (!userId) {
-				return res.status(400).json({ message: 'User ID is required' });
-			}
+	// Create a new calendar for a specific user and habit
+	static async createCalendar(req, res, next) {
+		const { userId, habitId } = req.body;
 
-			const { calendar, month, year } = await CalendarRepo.getCalendar(userId);
-			res.json({ calendar, month, year });
+		if (!userId || !habitId) {
+			return next(new appError('User ID and Habit ID are required', 400));
+		}
+
+		try {
+			const calendarEntries = await CalendarRepo.createCalendar(userId, habitId);
+			res.status(201).json({
+				status: 'success',
+				data: {
+					calendarEntries,
+				},
+			});
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	// Get next month's calendar entries for the user
-	static async getNextCalendar(req, res, next) {
-		try {
-			const userId = req.cookies.id;
-			const { month, year } = req.params;
-
-			if (!userId || !month || !year) {
-				return res
-					.status(400)
-					.json({ message: 'User ID, month, and year are required' });
-			}
-
-			const {
-				calendar,
-				month: nextMonth,
-				year: nextYear,
-			} = await CalendarRepo.getNextCalendar(userId, month, year);
-			res.json({ calendar, month: nextMonth, year: nextYear });
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	// Get previous month's calendar entries for the user
-	static async getPrevCalendar(req, res, next) {
-		try {
-			const userId = req.cookies.id;
-			const { month, year } = req.params;
-
-			if (!userId || !month || !year) {
-				return res
-					.status(400)
-					.json({ message: 'User ID, month, and year are required' });
-			}
-
-			const {
-				calendar,
-				month: prevMonth,
-				year: prevYear,
-			} = await CalendarRepo.getPrevCalendar(userId, month, year);
-			res.json({ calendar, month: prevMonth, year: prevYear });
-		} catch (err) {
-			next(err);
-		}
-	}
-
-	// Mark a specific date as done for the user
+	// Mark a specific date as done for a habit
 	static async markDateAsDone(req, res, next) {
+		const { habitId } = req.params;
+		const { year, month, date } = req.body;
+
+		if (!habitId || !year || !month || !date) {
+			return next(
+				new appError('Habit ID, year, month, and date are required', 400),
+			);
+		}
+
 		try {
-			const userId = req.cookies.id;
-			const { year, month, date } = req.body;
-
-			if (!userId || !year || !month || !date) {
-				return res
-					.status(400)
-					.json({ message: 'User ID, year, month, and date are required' });
-			}
-
-			const result = await CalendarRepo.markDateAsDone(userId, {
+			const calendarEntry = await CalendarRepo.markDateAsDone(habitId, {
 				year,
 				month,
 				date,
 			});
-			res.json(result);
+			res.status(200).json({
+				status: 'success',
+				data: {
+					calendarEntry,
+				},
+			});
 		} catch (err) {
 			next(err);
 		}
 	}
 
-	// Initialize a new calendar for the user
-	static async createCalendar(req, res, next) {
+	// Update the streak for a habit based on a specific date
+	static async updateStreak(req, res, next) {
+		const { habitId } = req.params;
+		const { year, month, date } = req.body;
+
+		if (!habitId || !year || !month || !date) {
+			return next(
+				new appError('Habit ID, year, month, and date are required', 400),
+			);
+		}
+
 		try {
-			const userId = req.cookies.id;
+			const streakInfo = await CalendarRepo.updateStreak(habitId, {
+				year,
+				month,
+				date,
+			});
+			res.status(200).json({
+				status: 'success',
+				data: streakInfo,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
 
-			if (!userId) {
-				return res.status(400).json({ message: 'User ID is required' });
-			}
+	// Get entries for yesterday, today, and tomorrow
+	static async getThreeDays(req, res, next) {
+		const { habitId, userId } = req.params;
 
-			const calendarEntries = await CalendarRepo.createCalendar(userId);
-			res.status(201).json({ calendarEntries });
+		if (!habitId || !userId) {
+			return next(new appError('Habit ID and User ID are required', 400));
+		}
+
+		try {
+			const threeDays = await CalendarRepo.getThreeDays(habitId, userId);
+			res.status(200).json({
+				status: 'success',
+				data: threeDays,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	// Get calendar entries for a specific month and year
+	static async getMonth(req, res, next) {
+		const { habitId, userId } = req.params;
+		const { year, month } = req.query;
+
+		if (!habitId || !userId || !year || !month) {
+			return next(
+				new appError('Habit ID, User ID, year, and month are required', 400),
+			);
+		}
+
+		try {
+			const monthEntries = await CalendarRepo.getMonth(
+				userId,
+				habitId,
+				year,
+				month,
+			);
+			res.status(200).json({
+				status: 'success',
+				data: monthEntries,
+			});
+		} catch (err) {
+			next(err);
+		}
+	}
+
+	// Get the previous or next month’s calendar entries
+	static async getAdjacentMonth(req, res, next) {
+		const { habitId, userId } = req.params;
+		const { year, month, direction } = req.query;
+
+		if (!habitId || !userId || !year || !month || !direction) {
+			return next(
+				new appError(
+					'Habit ID, User ID, year, month, and direction are required',
+					400,
+				),
+			);
+		}
+
+		if (!['prev', 'next'].includes(direction)) {
+			return next(new appError('Direction must be either "prev" or "next"', 400));
+		}
+
+		try {
+			const monthEntries = await CalendarRepo.getAdjacentMonth(
+				userId,
+				habitId,
+				year,
+				month,
+				direction,
+			);
+			res.status(200).json({
+				status: 'success',
+				data: monthEntries,
+			});
 		} catch (err) {
 			next(err);
 		}

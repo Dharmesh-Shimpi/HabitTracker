@@ -1,119 +1,223 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../utils/axios';
 
-// Async actions for calendar
-export const fetchCalendar = createAsyncThunk(
-	'calendar/fetchCalendar',
-	async (_, { rejectWithValue }) => {
+const initialState = {
+	calendar: [],
+	loading: false,
+	error: null,
+};
+
+export const fetchCalendarByIdThunk = createAsyncThunk(
+	'calendar/fetchCalendarById',
+	async ({ habitId, userId }) => {
 		try {
-			const response = await axios.get('/calendar');
-			return response.data;
+			const response = await api.get(`/calendar/${habitId}/${userId}/month`, {
+				params: {
+					year: new Date().getFullYear(),
+					month: new Date().toLocaleString('default', { month: 'long' }),
+				},
+			});
+			return response.data.data;
 		} catch (err) {
-			return rejectWithValue(err.response.data);
+			throw new Error(err.response.data.message);
 		}
 	},
 );
 
-export const fetchNextCalendar = createAsyncThunk(
-	'calendar/fetchNextCalendar',
-	async ({ month, year }, { rejectWithValue }) => {
+export const getThreeDaysThunk = createAsyncThunk(
+	'calendar/getThreeDays',
+	async ({ habitId, userId }) => {
 		try {
-			const response = await axios.get(`/calendar/next/${month}/${year}`);
-			return response.data;
+			const response = await api.get(`/calendar/${habitId}/${userId}/three-days`);
+			return response.data.data;
 		} catch (err) {
-			return rejectWithValue(err.response.data);
+			throw new Error(err.response.data.message);
 		}
 	},
 );
 
-export const fetchPrevCalendar = createAsyncThunk(
-	'calendar/fetchPrevCalendar',
-	async ({ month, year }, { rejectWithValue }) => {
+export const getMonthThunk = createAsyncThunk(
+	'calendar/getMonth',
+	async ({ habitId, userId, year, month }) => {
 		try {
-			const response = await axios.get(`/calendar/prev/${month}/${year}`);
-			return response.data;
+			const response = await api.get(`/calendar/${habitId}/${userId}/month`, {
+				params: { year, month },
+			});
+			return response.data.data;
 		} catch (err) {
-			return rejectWithValue(err.response.data);
+			throw new Error(err.response.data.message);
 		}
 	},
 );
 
-export const markDateAsDone = createAsyncThunk(
+export const getAdjacentMonthThunk = createAsyncThunk(
+	'calendar/getAdjacentMonth',
+	async ({ habitId, userId, year, month, direction }) => {
+		try {
+			const response = await api.get(
+				`/calendar/${habitId}/${userId}/month/adjacent`,
+				{
+					params: { year, month, direction },
+				},
+			);
+			return response.data.data;
+		} catch (err) {
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const getDateEntryThunk = createAsyncThunk(
+	'calendar/getDateEntry',
+	async ({ habitId, userId, year, month, date }) => {
+		try {
+			const response = await api.get(`/calendar/${habitId}/${userId}/date`, {
+				params: { year, month, date },
+			});
+			return response.data.data;
+		} catch (err) {
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const createCalendarThunk = createAsyncThunk(
+	'calendar/createCalendar',
+	async ({ userId, habitId }) => {
+		try {
+			const response = await api.post('/calendar', { userId, habitId });
+			return response.data.data.calendarEntries;
+		} catch (err) {
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const markDateAsDoneThunk = createAsyncThunk(
 	'calendar/markDateAsDone',
-	async (dateData, { rejectWithValue }) => {
+	async ({ habitId, date }) => {
 		try {
-			const response = await axios.post('/calendar/done', dateData);
-			return response.data;
+			const response = await api.patch(`/calendar/${habitId}/done`, date);
+			return response.data.data.calendarEntry;
 		} catch (err) {
-			return rejectWithValue(err.response.data);
+			throw new Error(err.response.data.message);
+		}
+	},
+);
+
+export const updateStreakThunk = createAsyncThunk(
+	'calendar/updateStreak',
+	async ({ habitId, date }) => {
+		try {
+			const response = await api.patch(`/calendar/${habitId}/streak`, date);
+			return response.data.data.streakInfo;
+		} catch (err) {
+			throw new Error(err.response.data.message);
 		}
 	},
 );
 
 const calendarSlice = createSlice({
 	name: 'calendar',
-	initialState: {
-		calendar: [],
-		month: '',
-		year: '',
-		status: 'idle',
-		error: null,
-	},
+	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchCalendar.pending, (state) => {
-				state.status = 'loading';
+			.addCase(fetchCalendarByIdThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
 			})
-			.addCase(fetchCalendar.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.calendar = action.payload.calendar;
-				state.month = action.payload.month;
-				state.year = action.payload.year;
+			.addCase(fetchCalendarByIdThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.calendar = action.payload;
 			})
-			.addCase(fetchCalendar.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.payload;
+			.addCase(fetchCalendarByIdThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
 			})
-			.addCase(fetchNextCalendar.pending, (state) => {
-				state.status = 'loading';
+			.addCase(getThreeDaysThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
 			})
-			.addCase(fetchNextCalendar.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.calendar = action.payload.calendar;
-				state.month = action.payload.month;
-				state.year = action.payload.year;
+			.addCase(getThreeDaysThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.calendar = action.payload;
 			})
-			.addCase(fetchNextCalendar.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.payload;
+			.addCase(getThreeDaysThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
 			})
-			.addCase(fetchPrevCalendar.pending, (state) => {
-				state.status = 'loading';
+			.addCase(getMonthThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
 			})
-			.addCase(fetchPrevCalendar.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.calendar = action.payload.calendar;
-				state.month = action.payload.month;
-				state.year = action.payload.year;
+			.addCase(getMonthThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.calendar = action.payload;
 			})
-			.addCase(fetchPrevCalendar.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.payload;
+			.addCase(getMonthThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
 			})
-			.addCase(markDateAsDone.pending, (state) => {
-				state.status = 'loading';
+			.addCase(getAdjacentMonthThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
 			})
-			.addCase(markDateAsDone.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				const updatedDate = action.payload;
-				state.calendar = state.calendar.map((date) =>
-					date._id === updatedDate._id ? updatedDate : date,
-				);
+			.addCase(getAdjacentMonthThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.calendar = action.payload;
 			})
-			.addCase(markDateAsDone.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.payload;
+			.addCase(getAdjacentMonthThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(getDateEntryThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(getDateEntryThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				// Update calendar with the new date entry
+			})
+			.addCase(getDateEntryThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(createCalendarThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(createCalendarThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.calendar = action.payload;
+			})
+			.addCase(createCalendarThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(markDateAsDoneThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(markDateAsDoneThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				// Update calendar with the new date entry
+			})
+			.addCase(markDateAsDoneThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(updateStreakThunk.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(updateStreakThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				// Update calendar with new streak info
+			})
+			.addCase(updateStreakThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
 			});
 	},
 });
