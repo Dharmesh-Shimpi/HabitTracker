@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
 	googleOauth,
 } from '../auth.redux';
@@ -11,10 +11,12 @@ export function OauthCallback() {
 	const { loading, error, success } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const code = searchParams.get('code');
+	const location = useLocation();
 
 	useEffect(() => {
+		const searchParams = new URLSearchParams(location.search);
+		const code = searchParams.get('code');
+		
 		if (code != null) {
 			dispatch(googleOauth(code));
 		}
