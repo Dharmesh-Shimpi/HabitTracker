@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --font-family: 'Poppins', sans-serif;
     --font-weight: 400;
     --background-image: url(/confetti-doodles-brown.svg);
@@ -35,20 +35,20 @@ body {
 
 h2 {
     text-align: center;
-    font-size: 2rem; /* Use rem for scalability */
+    font-size: 2rem; 
     margin-bottom: 1rem;
 }
 
 h3 {
     text-align: center;
-    font-size: 1.5rem; /* Use rem for scalability */
+    font-size: 1.5rem; 
     color: var(--primary-color);
     margin-bottom: 0.75rem;
 }
 
 h4 {
     text-align: center;
-    font-size: 1.25rem; /* Use rem for scalability */
+    font-size: 1.25rem; 
     color: var(--secondary-color);
     margin-bottom: 0.75rem;
 }
@@ -58,7 +58,7 @@ p {
     margin-bottom: 1rem;
 }
 
-/* Scrollbar styling */
+
 ::-webkit-scrollbar {
     width: 5px;
     background: transparent;
@@ -73,7 +73,7 @@ p {
     border-radius: 10px;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
     h2 {
         font-size: 1.75rem;
@@ -99,7 +99,7 @@ p {
     100% {
         transform: scale(1);
     }
-}
+} */
 
 :root {
     --font-family: 'Poppins', sans-serif;
@@ -181,19 +181,19 @@ p {
 /* Responsive font sizes */
 @media screen and (max-width: 343px) {
     * {
-        font-size: 7px; /* 11px */
+        font-size: 11px; /* 11px */
     }
 }
 
 @media screen and (min-width: 344px) and (max-width: 367px) {
     * {
-        font-size: 7px;  /* 12px */
+        font-size: 12px;  /* 12px */
     }
 }
 
 @media screen and (min-width: 368px) and (max-width: 389px) {
     * {
-        font-size: 7px; /* 13px */
+        font-size: 13px; /* 13px */
     }
 }
 

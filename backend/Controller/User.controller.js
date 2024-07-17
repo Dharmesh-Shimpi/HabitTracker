@@ -16,9 +16,6 @@ export default class UserController {
 			const { id, token } = await UserModel.loginUser(req.body);
 
 			res.cookie('token', token, {
-				httpOnly: true,
-				secure: true,
-				sameSite: 'strict',
 				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
 			res.cookie('id', id, {
