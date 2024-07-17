@@ -16,11 +16,11 @@ export function OauthCallback() {
 	useEffect(() => {
 		const searchParams = new URLSearchParams(location.search);
 		const code = searchParams.get('code');
-		
+
 		if (code != null) {
 			dispatch(googleOauth(code));
 		}
-	}, []);
+	}, [dispatch, location]);
 
 	useEffect(() => {
 		if (success) {
