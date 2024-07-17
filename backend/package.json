@@ -1,27 +1,28 @@
 {
-  "name": "habit",
-  "version": "1.0.0",
-  "description": "habit tracker",
-  "main": "server.js",
-  "scripts": {
-    "test": "habit tracker",
-    "start": "nodemon server.js"
-  },
-  "author": "dharmesh",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "axios": "^1.7.2",
-    "bcrypt": "^5.1.1",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-ejs-layouts": "^2.5.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.6.0",
-    "mongoose": "^8.4.4",
-    "nodemon": "^3.1.0"
-  }
+	"name": "habittracker_backend",
+	"version": "1.0.1",
+	"description": "habit tracker API's",
+	"main": "server.js",
+	"scripts": {
+		"test": "habit tracker",
+		"start": "nodemon server.js",
+		"dev": "node server"
+	},
+	"author": "dharmesh",
+	"license": "ISC",
+	"type": "module",
+	"dependencies": {
+		"axios": "^1.7.2",
+		"bcrypt": "^5.1.1",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"ejs": "^3.1.10",
+		"express": "^4.19.2",
+		"express-ejs-layouts": "^2.5.1",
+		"jsonwebtoken": "^9.0.2",
+		"mongodb": "^6.6.0",
+		"mongoose": "^8.4.4",
+		"nodemon": "^3.1.0"
+	}
 }
