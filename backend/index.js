@@ -10,11 +10,11 @@ import Calendar from './Routes/Calendar.routes.js';
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.set('views', 'views');
 app.use(express.static('views'));
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use(cookieParser());
 app.get('/', (req, res) => res.render('index'));
 app.use('/api', User);
 app.use('/api', Habit);
