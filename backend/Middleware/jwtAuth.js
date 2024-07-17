@@ -12,7 +12,7 @@ export default class Auth {
 
 	static verify(req, res) {
 		const token = req.cookies.token;
-
+		
 		if (token) {
 			res.json({ isVerified: true });
 		} else {
