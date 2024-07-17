@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "habit tracker",
 		"start": "nodemon server.js",
-		"dev": "node server"
+		"dev": "node server.js"
 	},
 	"author": "dharmesh",
 	"license": "ISC",
