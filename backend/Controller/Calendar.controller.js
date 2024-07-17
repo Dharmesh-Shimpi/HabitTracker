@@ -2,29 +2,10 @@ import CalendarRepo from '../Model/Habit/Calendar.repository.js';
 import appError from '../Middleware/errors.js';
 
 export default class CalendarController {
-	// Create a new calendar for a specific user and habit
-	static async createCalendar(req, res, next) {
-		const { userId, habitId } = req.body;
-
-		if (!userId || !habitId) {
-			return next(new appError('User ID and Habit ID are required', 400));
-		}
-
-		try {
-			const calendarEntries = await CalendarRepo.createCalendar(userId, habitId);
-			res.status(201).json({
-				status: 'success',
-				data: {
-					calendarEntries,
-				},
-			});
-		} catch (err) {
-			next(err);
-		}
-	}
 
 	// Mark a specific date as done for a habit
 	static async markDateAsDone(req, res, next) {
+		const userId = req.cookies.id;
 		const { habitId } = req.params;
 		const { year, month, date } = req.body;
 
@@ -79,7 +60,8 @@ export default class CalendarController {
 
 	// Get entries for yesterday, today, and tomorrow
 	static async getThreeDays(req, res, next) {
-		const { habitId, userId } = req.params;
+		const { habitId } = req.params;
+		const userId = req.cookies.id;
 
 		if (!habitId || !userId) {
 			return next(new appError('Habit ID and User ID are required', 400));
@@ -98,7 +80,8 @@ export default class CalendarController {
 
 	// Get calendar entries for a specific month and year
 	static async getMonth(req, res, next) {
-		const { habitId, userId } = req.params;
+		const { habitId } = req.params;
+		const userId = req.cookies.id;
 		const { year, month } = req.query;
 
 		if (!habitId || !userId || !year || !month) {
@@ -125,7 +108,8 @@ export default class CalendarController {
 
 	// Get the previous or next month’s calendar entries
 	static async getAdjacentMonth(req, res, next) {
-		const { habitId, userId } = req.params;
+		const { habitId } = req.params;
+		const userId = req.cookies.id;
 		const { year, month, direction } = req.query;
 
 		if (!habitId || !userId || !year || !month || !direction) {

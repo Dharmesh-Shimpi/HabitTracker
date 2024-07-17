@@ -1,8 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Theme } from './Themes/Theme';
-import { setSuccess } from '../../../Redux/auth.redux';
-import api from '../../../utils/axios';
+import { setSuccess } from '../../Users/auth.redux';
+import api from '../../utils/axios';
 
 import css from './Nav.module.css';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../../../utils/axios';
+import api from '../../utils/axios';
 import css from './Oauth.module.css';
 
 export const OAuth = () => {

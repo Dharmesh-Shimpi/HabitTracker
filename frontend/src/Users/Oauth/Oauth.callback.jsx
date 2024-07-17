@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
 	googleOauth,
-} from '../../../Redux/auth.redux';
+} from '../auth.redux';
 
 import css from './Oauth.callback.module.css';
 

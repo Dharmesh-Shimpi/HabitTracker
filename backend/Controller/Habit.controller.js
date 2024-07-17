@@ -1,10 +1,12 @@
 import Habit from '../Model/Habit/Habit.repository.js';
+import CalendarRepo from '../Model/Habit/Calendar.repository.js';
 
 export default class HabitController {
 	// Get habits for the current user
 	static async getHabit(req, res, next) {
 		try {
 			const id = req.cookies.id;
+			
 			if (!id) {
 				return res.status(400).json({ message: 'User ID is required' });
 			}
@@ -20,21 +22,20 @@ export default class HabitController {
 	static async createHabit(req, res, next) {
 		try {
 			const id = req.cookies.id;
-			const { name, weeklyGoal, category, customCategory } = req.body;
-
-			if (!id || !name || !weeklyGoal) {
+			const { name, weeklyGoal } = req.body;
+	
+			if (!id || !weeklyGoal || !name) {
 				return res
 					.status(400)
 					.json({ message: 'User ID, name, and weekly goal are required' });
 			}
 
 			const newHabit = await Habit.createHabit({
-				id,
+				userId: id,
 				name,
 				weeklyGoal,
-				category,
-				customCategory,
 			});
+			await CalendarRepo.createCalendar(userId, newHabit._id);
 			res.status(201).json({ newHabit });
 		} catch (err) {
 			next(err);
@@ -46,24 +47,18 @@ export default class HabitController {
 		try {
 			const id = req.cookies.id;
 			const habitId = req.params.habitId;
-			const { name, weeklyGoal, category, customCategory } = req.body;
+			const { name, weeklyGoal } = req.body;
 
-			if (
-				!id ||
-				!habitId ||
-				(!name && !weeklyGoal && !category && !customCategory)
-			) {
+			if (!id || !habitId || (!name && !weeklyGoal)) {
 				return res.status(400).json({
 					message:
-						'User ID, habit ID, and at least one field (name, weekly goal, category, or customCategory) are required',
+						'User ID, habit ID, and at least one field (name or weekly goal) are required',
 				});
 			}
 
 			const updatedHabit = await Habit.updateHabit(id, habitId, {
 				name,
 				weeklyGoal,
-				category,
-				customCategory,
 			});
 			if (!updatedHabit) {
 				return res.status(404).json({ message: 'Habit not found' });

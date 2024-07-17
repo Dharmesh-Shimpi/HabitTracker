@@ -38,3 +38,14 @@ button:hover {
 	box-shadow: 4px 4px 1px #ff6200;
 	transform: translateY(0.1rem);
 }
+
+/* Styles for the selected option */
+.inputDiv select {
+	background-color: #000;
+}
+
+/* Styles for the dropdown menu */
+/* select option:checked {
+	background: none;
+	color: #000; 
+} */

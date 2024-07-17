@@ -1,20 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const categories = [
-	'Physical Activities',
-	'Meditation',
-	'Creative Tasks',
-	'Educational Activities',
-	'Healthy Eating',
-	'Relaxation',
-	'New Hobbies',
-	'Eco-Friendly Tasks',
-	'Digital Management',
-	'Reading',
-	'Other',
-];
-
 const habitSchema = new Schema({
 	name: {
 		type: String,
@@ -25,7 +11,7 @@ const habitSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	
+
 	currentStreak: {
 		type: Number,
 		default: 0,
@@ -37,6 +23,7 @@ const habitSchema = new Schema({
 		default: 0,
 		required: true,
 	},
+
 });
 
 export default mongoose.model('Habit', habitSchema);

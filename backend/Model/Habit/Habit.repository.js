@@ -4,14 +4,18 @@ import appError from '../../Middleware/errors.js';
 import CalendarRepo from './Calendar.repository.js';
 
 export default class HabitRepo {
+	// get habits
+	static async getHabit(id) {
+		try {
+			const user = await User.findById(id).populate('habits');
+			if (!user) {
+				throw new appError(`User not found`, 404);
+			}
+			return user.habits;
+		} catch (err) {throw new appError(`Error getting habit. Error: ${err.message}`, 401);}
+	}
 	// Create Habit with associated calendar
-	static async createHabit({
-		userId,
-		name,
-		weeklyGoal,
-		category,
-		customCategory,
-	}) {
+	static async createHabit({ userId, name, weeklyGoal }) {
 		try {
 			const user = await User.findById(userId).populate('habits');
 			if (!user) {
@@ -21,8 +25,6 @@ export default class HabitRepo {
 			const newHabit = new Habit({
 				name,
 				weeklyGoal,
-				category,
-				customCategory: category === 'Other' ? customCategory : undefined,
 			});
 
 			const savedHabit = await newHabit.save();
@@ -65,7 +67,7 @@ export default class HabitRepo {
 			user.habits.splice(habitIndex, 1);
 			await user.save();
 
-			await Calendar.deleteMany({ habitId });
+			await CalendarRepo.deleteMany({ habitId });
 			await habit.remove();
 
 			return user.habits;
@@ -75,11 +77,7 @@ export default class HabitRepo {
 	}
 
 	// Update a habit
-	static async updateHabit(
-		userId,
-		habitId,
-		{ name, weeklyGoal, category, customCategory },
-	) {
+	static async updateHabit(userId, habitId, { name, weeklyGoal }) {
 		try {
 			const user = await User.findById(userId).populate('habits');
 			if (!user) {
@@ -94,12 +92,6 @@ export default class HabitRepo {
 			// Update habit details
 			if (name) habit.name = name;
 			if (weeklyGoal) habit.weeklyGoal = weeklyGoal;
-			if (category) habit.category = category;
-			if (category === 'Other' && customCategory) {
-				habit.customCategory = customCategory;
-			} else if (category !== 'Other') {
-				habit.customCategory = undefined;
-			}
 
 			await habit.save();
 

@@ -2,7 +2,7 @@
 import React, { Children, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { verifyToken } from '../Redux/Protected.redux';
+import { verifyToken } from '../Users/Protected.redux';
 
 const ProtectedRoute = ({children}) => {
 	const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { themes, fonts } from '../../../../Redux/themes.redux';
+import { themes, fonts } from './themes.redux';
 import css from './Theme.module.css';
 
 export function Theme() {

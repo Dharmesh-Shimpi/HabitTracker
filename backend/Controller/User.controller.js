@@ -45,15 +45,13 @@ export default class UserController {
 				sameSite: 'strict',
 				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
-			
-			const user = await UserModel.registerOauthUser(userInfo);
-			console.log(user);
-			res.cookie('id', user._id, {
+			res.cookie('id', userInfo._id, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
 				sameSite: 'strict',
 				maxAge: 24 * 60 * 60 * 1000, // 1 day
 			});
+			await UserModel.registerOauthUser(userInfo);
 			res.sendStatus(200);
 		} catch (err) {
 			next(err);

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Streak } from '../Main/Streak/Streak';
-import { getHabitsThunk, setStatus } from '../../../Redux/Habit.redux';
+import { Streak } from './Streak/Streak';
+import { getHabitsThunk, setStatus } from './Habit.redux';
 import css from './Habits.module.css';
 
 export function Habits() {
@@ -34,7 +34,7 @@ export function Habits() {
 						habits.length > 0 &&
 						habits.map((data, i) => (
 							<Link
-									to={`/${data.id}`}
+									to={`/${data._id}`}
 								className={css.link}
 								key={data.id}>
 								<li className={css.li}>{data.name}</li>

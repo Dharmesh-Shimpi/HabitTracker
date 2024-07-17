@@ -11,10 +11,8 @@ export default class Auth {
 	}
 
 	static verify(req, res) {
-		console.log('reached verify function');
-		const token = req.cookies
-		const id = req.cookies;
-		console.log(token, id);
+		const token = req.cookies.token;
+
 		if (token) {
 			res.json({ isVerified: true });
 		} else {

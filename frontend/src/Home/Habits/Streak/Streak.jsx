@@ -1,23 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { fetchCalendarByIdThunk } from '../../../../Redux/Calendar.redux';
+// import { useEffect } from 'react';
+
 import css from './Streak.module.css';
 
 export function Streak() {
 	const { id } = useParams();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
 	// Get the habit and its calendar from the Redux store
 	const habit = useSelector((state) =>
 		state.habits.habits?.find((h) => h.id === id),
 	);
-
-	useEffect(() => {
-		if (id) {
-			dispatch(fetchCalendarByIdThunk(id));
-		}
-	}, [dispatch, id]);
 
 	if (!habit) {
 		return <div>No Streak Found</div>;

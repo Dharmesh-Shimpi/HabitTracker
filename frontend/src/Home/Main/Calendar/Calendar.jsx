@@ -2,46 +2,37 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import {
-	fetchCalendarByIdThunk,
-	markDateAsDoneThunk,
 	getMonthThunk,
+	markDateAsDoneThunk,
 	getAdjacentMonthThunk,
-} from '../../../../Redux/Calendar.redux';
+} from './Calendar.redux';
 import css from './Calendar.module.css';
 
 export function Calendar() {
 	const { id } = useParams();
+	if (!id) return <h1>Select a Habit</h1>
 	const dispatch = useDispatch();
 	const [visibleButtonIndex, setVisibleButtonIndex] = useState(null);
 
 	// Fetch the habit using `id`
-	const habit = useSelector(
-		(state) => state.habits.habits.find((h) => h._id === id), // Assuming `id` is `_id` in the habit object
+	const habit = useSelector((state) =>
+		state.habits.habits.find((h) => h._id === id),
 	);
 
 	// Get calendar data from Redux state
 	const calendar = useSelector((state) => state.calendar.calendar);
+	const loading = useSelector((state) => state.calendar.loading);
 
 	useEffect(() => {
 		if (id) {
-			dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })); // Adjust the userId as needed
+			dispatch(getMonthThunk({ habitId: id }));
 		}
 	}, [dispatch, id]);
 
 	const handleMarkDateAsDone = (date) => {
 		dispatch(markDateAsDoneThunk({ habitId: id, date }))
-			.then(() =>
-				dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })),
-			) // Fetch updated calendar data
+			.then(() => dispatch(getMonthThunk({ habitId: id })))
 			.catch((error) => console.error('Failed to mark date as done:', error));
-	};
-
-	const handleStreakUpdate = (date) => {
-		dispatch(updateStreakThunk({ habitId: id, date }))
-			.then(() =>
-				dispatch(fetchCalendarByIdThunk({ habitId: id, userId: 'someUserId' })),
-			) // Fetch updated calendar data
-			.catch((error) => console.error('Failed to update streak:', error));
 	};
 
 	const handleDivClick = (index) => {
@@ -84,20 +75,21 @@ export function Calendar() {
 		return <div>Habit not found</div>;
 	}
 
-	if (!calendar.length) {
+	if (loading) {
 		return <div>Loading...</div>;
 	}
 
-	const monthYear = calendar[0].date.split(' ');
-	const month = monthYear[1];
-	const year = monthYear[3];
+	const monthYear = calendar[0]?.date.split(' ');
+	console.log(monthYear);
+	// const month = monthYear[1];
+	// const year = monthYear[3];
 
 	return (
 		<div>
 			<h3>{habit.name}</h3>
-			<div className='monthYear'>
+			<div className={css.monthYear}>
 				<button onClick={handlePrevMonth}>Previous</button>
-				{month} {year}
+				{/* {month} {year} */}
 				<button onClick={handleNextMonth}>Next</button>
 			</div>
 			<div className={css.calendarContainer}>

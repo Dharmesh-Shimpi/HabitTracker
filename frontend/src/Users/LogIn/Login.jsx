@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser, setEmail, setPassword } from '../../../Redux/auth.redux';
+import { loginUser, setEmail, setPassword } from '../auth.redux';
 import OAuth from '../Oauth/Oauth';
 import css from './Login.module.css';
 

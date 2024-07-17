@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../utils/axios';
+import api from '../../utils/axios';
 
 const initialState = {
 	habits: [],
@@ -11,6 +11,7 @@ const initialState = {
 export const getHabitsThunk = createAsyncThunk('habits/getHabits', async () => {
 	try {
 		const response = await api.get('/habits');
+		console.log(response.data.habits);
 		return response.data.habits;
 	} catch (err) {
 		throw new Error(err.response.data.message);
@@ -19,10 +20,9 @@ export const getHabitsThunk = createAsyncThunk('habits/getHabits', async () => {
 
 export const createHabitsThunk = createAsyncThunk(
 	'habits/createHabits',
-	async (data, { dispatch }) => {
+	async (data) => {
 		try {
 			const response = await api.post('/habits', data);
-			dispatch(getHabitsThunk()); // Refresh the list of habits
 			return response.data.newHabit;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -32,10 +32,9 @@ export const createHabitsThunk = createAsyncThunk(
 
 export const markDateAsDoneThunk = createAsyncThunk(
 	'habits/markDateAsDone',
-	async ({ habitId, date }, { dispatch }) => {
+	async ({ habitId, date }) => {
 		try {
 			const response = await api.patch(`/habits/${habitId}/markDateAsDone`, date);
-			dispatch(getHabitsThunk()); // Refresh the list of habits
 			return response.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -45,10 +44,9 @@ export const markDateAsDoneThunk = createAsyncThunk(
 
 export const updateStreakThunk = createAsyncThunk(
 	'habits/updateStreak',
-	async ({ habitId, date }, { dispatch }) => {
+	async ({ habitId, date }) => {
 		try {
 			const response = await api.patch(`/habits/${habitId}/updateStreak`, date);
-			dispatch(getHabitsThunk()); // Refresh the list of habits
 			return response.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -66,6 +64,7 @@ const habitsSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
+			// Get habit
 			.addCase(getHabitsThunk.pending, (state) => {
 				state.loading = true;
 				state.error = null;
@@ -78,11 +77,13 @@ const habitsSlice = createSlice({
 				state.loading = false;
 				state.error = action.error.message;
 			})
+			// Create habit
 			.addCase(createHabitsThunk.pending, (state) => {
 				state.loading = true;
 				state.error = null;
 			})
 			.addCase(createHabitsThunk.fulfilled, (state, action) => {
+				state.habits = [...state.habits, action.payload];
 				state.loading = false;
 				state.status = true;
 			})
@@ -90,6 +91,7 @@ const habitsSlice = createSlice({
 				state.loading = false;
 				state.error = action.error.message;
 			})
+			// Mark habit as done
 			.addCase(markDateAsDoneThunk.pending, (state) => {
 				state.loading = true;
 				state.error = null;
@@ -101,6 +103,7 @@ const habitsSlice = createSlice({
 				state.loading = false;
 				state.error = action.error.message;
 			})
+			// Update Streak
 			.addCase(updateStreakThunk.pending, (state) => {
 				state.loading = true;
 				state.error = null;

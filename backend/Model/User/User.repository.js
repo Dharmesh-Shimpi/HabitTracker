@@ -39,7 +39,7 @@ export default class UserRepo {
 		try {
 			const { name, email } = data;
 			const user = await UserSchema.findOne({ email });
-			if (user) return { name, email };  
+			if (user) return;  
 			const newUser = new UserSchema({
 				username: name,
 				email,
