@@ -4,7 +4,6 @@
 	"description": "habit tracker API's",
 	"main": "server.js",
 	"scripts": {
-		"test": "habit tracker",
 		"start": "nodemon server.js",
 		"dev": "node server.js"
 	},
@@ -24,5 +23,8 @@
 		"mongodb": "^6.6.0",
 		"mongoose": "^8.4.4",
 		"nodemon": "^3.1.0"
+	},
+	"devDependencies": {
+		"node-gyp": "^10.2.0"
 	}
 }
