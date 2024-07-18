@@ -24,6 +24,7 @@ export default class UserRepo {
 	static async loginUser(data) {
 		const { email, password } = data;
 		const user = await UserSchema.findOne({ email });
+	
 		if (!user) {
 			throw new appError('No Account with entered email', 401);
 		}

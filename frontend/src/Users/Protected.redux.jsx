@@ -1,9 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { jwtDecode } from 'jwt-decode';
 import api from '../utils/axios';
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
 	try {
-		const { data } = await api.get('/verify');
+		const token = localStorage.getItem('token');
+		const decoded = jwtDecode(token);
+		const { data } = await api.get(`/verify/${token}`);
 		console.log(data);
 		return data;
 	} catch (err) {

@@ -13,18 +13,8 @@ export default class UserController {
 
 	static async login(req, res, next) {
 		try {
-			const { id, token } = await UserModel.loginUser(req.body);
-
-			res.cookie('token', token, {
-				maxAge: 24 * 60 * 60 * 1000, // 1 day
-			});
-			res.cookie('id', id, {
-				httpOnly: true,
-				secure: true,
-				sameSite: 'strict',
-				maxAge: 24 * 60 * 60 * 1000, // 1 day
-			});
-			res.sendStatus(200);
+			const { token } = await UserModel.loginUser(req.body);
+			res.json(token);
 		} catch (err) {
 			next(err);
 		}
