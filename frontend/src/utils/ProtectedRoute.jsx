@@ -6,6 +6,7 @@ import { verifyToken } from '../Users/Protected.redux';
 
 const ProtectedRoute = ({children}) => {
 	const dispatch = useDispatch();
+	const token = localStorage.getItem('token');
 	const { isAuthenticated, loading } = useSelector((state) => state.protected);
 
 	useEffect(() => {

@@ -2,13 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 import api from '../utils/axios';
 
-export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
+export const verifyToken = createAsyncThunk('auth/verifyToken', async ({dispatch}) => {
 	try {
-		const token = localStorage.getItem('token');
-		const decoded = jwtDecode(token);
-		const { data } = await api.get(`/verify/${token}`);
-		console.log(data);
-		return data;
+		
+		if (token) {
+			const decoded = jwtDecode(token);
+			const { data } = await api.get(`/verify/${token}`);
+			console.log(data);
+			return data;
+		} else {
+			dispatch()
+		}
 	} catch (err) {
 		throw err;
 	}

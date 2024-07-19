@@ -20,6 +20,7 @@ export const loginUser = createAsyncThunk(
 		try {
 			const response = await api.post('/login', { email, password });
 			console.log(response.data);
+			localStorage.setItem(response.data);
 			return response.data;
 		} catch (error) {
 			return error.response.data;
@@ -38,14 +39,6 @@ export const googleOauth = createAsyncThunk(
 	},
 );
 
-export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
-	try {
-		await api.get('/verify');
-	} catch (error) {
-		return error.response.data;
-	}
-});
-
 const authSlice = createSlice({
 	name: 'auth',
 	initialState: {
@@ -54,6 +47,7 @@ const authSlice = createSlice({
 		password: '',
 		loading: false,
 		error: null,
+		token: '',
 		success: false,
 	},
 	reducers: {
@@ -111,19 +105,6 @@ const authSlice = createSlice({
 				state.success = true;
 			})
 			.addCase(googleOauth.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message;
-			})
-			// Verify Token
-			.addCase(verifyToken.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(verifyToken.fulfilled, (state, action) => {
-				state.success = action.payload.isVerified;
-				state.loading = false;
-			})
-			.addCase(verifyToken.rejected, (state, action) => {
-				state.success = false;
 				state.loading = false;
 				state.error = action.error.message;
 			});

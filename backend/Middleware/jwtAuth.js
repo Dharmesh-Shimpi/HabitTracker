@@ -11,7 +11,7 @@ export default class Auth {
 	}
 
 	static verify(req, res) {
-		const token = req.params;
+		const token = req.params.token;
 		console.log(token);
 		if (token) {
 			res.json({ isVerified: true });
