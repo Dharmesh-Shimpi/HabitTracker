@@ -1,6 +1,6 @@
 import Habit from './Habit.model.js';
-import User from '../User/User.model.js';
-import appError from '../../Middleware/errors.js';
+import User from '../Users/User.model.js';
+import appError from 'Middleware/errors.js';
 import CalendarRepo from './Calendar.repository.js';
 
 export default class HabitRepo {
@@ -12,7 +12,9 @@ export default class HabitRepo {
 				throw new appError(`User not found`, 404);
 			}
 			return user.habits;
-		} catch (err) {throw new appError(`Error getting habit. Error: ${err.message}`, 401);}
+		} catch (err) {
+			throw new appError(`Error getting habit. Error: ${err.message}`, 401);
+		}
 	}
 	// Create Habit with associated calendar
 	static async createHabit({ userId, name, weeklyGoal }) {

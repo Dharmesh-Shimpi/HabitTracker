@@ -1,5 +1,5 @@
-import Habit from '../Model/Habit/Habit.repository.js';
-import CalendarRepo from '../Model/Habit/Calendar.repository.js';
+import Habit from './Habit.repository.js';
+import CalendarRepo from './Calendar.repository.js';
 
 export default class HabitController {
 	// Get habits for the current user
@@ -23,7 +23,7 @@ export default class HabitController {
 		try {
 			const id = req.cookies.id;
 			const { name, weeklyGoal } = req.body;
-	
+
 			if (!id || !weeklyGoal || !name) {
 				return res
 					.status(400)

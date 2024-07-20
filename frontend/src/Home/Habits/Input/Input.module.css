@@ -1,9 +1,11 @@
 .inputBox {
 	height: 100%;
 	width: 75%;
-	/* border: 2px solid var(--color); */
+	border: 2px solid var(--color);
 	/* padding: 1rem; */
 	/* flex-grow: 3; */
+	display:flex;
+	justify-content: ;
 }
 .inputDiv {
 	margin: 1rem;

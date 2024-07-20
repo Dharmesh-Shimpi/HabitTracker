@@ -1,11 +1,11 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import appError from './Middleware/errors.js';
-import { corsOptions } from './Middleware/Cors.js';
+import appError from 'Middleware/errors.js';
+import { corsOptions } from 'Middleware/Cors.js';
 import User from './Routes/User.routes.js';
-import Habit from './Routes/Habits.routes.js';
-import Calendar from './Routes/Calendar.routes.js';
+import Habit from './src/Habit/Habits.routes.js';
+import Calendar from './src/Calendar/Calendar.routes.js';
 
 const app = express();
 

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import axios from 'axios';
-import appError from './errors.js';
+import appError from 'Middleware/errors.js';
 
 export default class Oauth {
 	static getGoogleAuthURL() {

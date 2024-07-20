@@ -1,5 +1,5 @@
 import UserModel from '../Model/User/User.repository.js';
-import Oauth from '../Middleware/Oauth.js';
+import Oauth from 'Middleware/Oauth.js';
 
 export default class UserController {
 	static async register(req, res, next) {

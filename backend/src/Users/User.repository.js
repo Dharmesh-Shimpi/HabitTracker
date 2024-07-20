@@ -1,7 +1,7 @@
 import UserSchema from './User.model.js';
-import { hashPassword, verifyPassword } from '../../Middleware/bcrypt.js';
-import Auth from '../../Middleware/jwtAuth.js';
-import appError from '../../Middleware/errors.js';
+import { hashPassword, verifyPassword } from '../Middleware/bcrypt.js';
+import Auth from '../Middleware/jwtAuth.js';
+import appError from '../Middleware/errors.js';
 
 export default class UserRepo {
 	static async registerUser(data) {
@@ -24,7 +24,7 @@ export default class UserRepo {
 	static async loginUser(data) {
 		const { email, password } = data;
 		const user = await UserSchema.findOne({ email });
-	
+
 		if (!user) {
 			throw new appError('No Account with entered email', 401);
 		}
@@ -40,7 +40,7 @@ export default class UserRepo {
 		try {
 			const { name, email } = data;
 			const user = await UserSchema.findOne({ email });
-			if (user) return;  
+			if (user) return;
 			const newUser = new UserSchema({
 				username: name,
 				email,

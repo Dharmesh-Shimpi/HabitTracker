@@ -1,6 +1,6 @@
-import Calendar from './Calendar.model.js';
+import Calendar from '../Calendar/Calendar.model.js';
 import Habit from './Habit.model.js';
-import appError from '../../Middleware/errors.js';
+import appError from 'Middleware/errors.js';
 
 const days = [
 	'Sunday',

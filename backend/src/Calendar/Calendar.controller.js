@@ -1,8 +1,7 @@
-import CalendarRepo from '../Model/Habit/Calendar.repository.js';
-import appError from '../Middleware/errors.js';
+import CalendarRepo from '../src/Habit/Calendar.repository.js';
+import appError from 'Middleware/errors.js';
 
 export default class CalendarController {
-
 	// Mark a specific date as done for a habit
 	static async markDateAsDone(req, res, next) {
 		const userId = req.cookies.id;
