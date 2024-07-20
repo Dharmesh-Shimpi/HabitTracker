@@ -16,7 +16,7 @@ const root = createRoot(container);
 
 const router = createBrowserRouter([
 	{
-		path: '/',
+		path: '/HabitTracker',
 		element: (
 			<ProtectedRoute>
 				<Home />
@@ -34,15 +34,15 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/register',
+		path: '/HabitTracker/register',
 		element: <Register />,
 	},
 	{
-		path: '/login',
+		path: '/HabitTracker/login',
 		element: <Login />,
 	},
 	{
-		path: '/oauth',
+		path: '/HabitTracker/oauth',
 		element: <OauthCallback />,
 	},
 ]);
