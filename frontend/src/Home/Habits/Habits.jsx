@@ -10,14 +10,15 @@ export function Habits() {
 	const { habits, error, loading, status } = useSelector(
 		(state) => state.habits,
 	);
+	const { id } = useSelector((state) => state.protected);
 
 	useEffect(() => {
-		dispatch(getHabitsThunk());
+		dispatch(getHabitsThunk(id));
 	}, [dispatch]);
 
 	useEffect(() => {
 		if (status) {
-			dispatch(getHabitsThunk());
+			dispatch(getHabitsThunk(id));
 			dispatch(setStatus());
 		}
 	}, [dispatch, status]);
@@ -28,13 +29,13 @@ export function Habits() {
 				<h1 className={css.h}>Habits</h1>
 				{loading && <p>Loading...</p>}
 				{error && <p>Error: {error}</p>}
-				{!loading && !error && !habits && <p>No habits found</p>}
+				{habits.length === 0 && <p>No habits found</p>}
 				<ul className={css.ul}>
 					{habits &&
 						habits.length > 0 &&
 						habits.map((data, i) => (
 							<Link
-									to={`/${data._id}`}
+								to={`/${data._id}`}
 								className={css.link}
 								key={data.id}>
 								<li className={css.li}>{data.name}</li>

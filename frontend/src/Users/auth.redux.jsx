@@ -20,8 +20,7 @@ export const loginUser = createAsyncThunk(
 		try {
 			const response = await api.post('/login', { email, password });
 			console.log(response.data);
-			localStorage.setItem(response.data);
-			return response.data;
+			localStorage.setItem('token', response.data);
 		} catch (error) {
 			return error.response.data;
 		}
@@ -47,7 +46,6 @@ const authSlice = createSlice({
 		password: '',
 		loading: false,
 		error: null,
-		token: '',
 		success: false,
 	},
 	reducers: {
@@ -59,6 +57,9 @@ const authSlice = createSlice({
 		},
 		setSuccess: (state, action) => {
 			state.success = action.payload;
+		},
+		setError: (state, action) => {
+			state.error = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -88,7 +89,6 @@ const authSlice = createSlice({
 			.addCase(loginUser.fulfilled, (state, action) => {
 				state.loading = false;
 				state.success = true;
-				state.id = action.payload._id;
 			})
 			.addCase(loginUser.rejected, (state, action) => {
 				state.loading = false;
@@ -111,5 +111,5 @@ const authSlice = createSlice({
 	},
 });
 
-export const { setEmail, setPassword, setSuccess } = authSlice.actions;
+export const { setEmail, setPassword, setSuccess, setError } = authSlice.actions;
 export default authSlice.reducer;

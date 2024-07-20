@@ -5,8 +5,8 @@ export default class HabitController {
 	// Get habits for the current user
 	static async getHabit(req, res, next) {
 		try {
-			const id = req.cookies.id;
-			
+			const id = req.params.id;
+			console.log(req.params);
 			if (!id) {
 				return res.status(400).json({ message: 'User ID is required' });
 			}

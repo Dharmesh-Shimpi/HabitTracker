@@ -8,21 +8,24 @@ const initialState = {
 	status: false,
 };
 
-export const getHabitsThunk = createAsyncThunk('habits/getHabits', async () => {
-	try {
-		const response = await api.get('/habits');
-		console.log(response.data.habits);
-		return response.data.habits;
-	} catch (err) {
-		throw new Error(err.response.data.message);
-	}
-});
+export const getHabitsThunk = createAsyncThunk(
+	'habits/getHabits',
+	async (id) => {
+		try {
+			const response = await api.get(`${id}/habits`);
+			console.log(response);
+			return response.data.habits;
+		} catch (err) {
+			throw new Error(err.response.data.message);
+		}
+	},
+);
 
 export const createHabitsThunk = createAsyncThunk(
 	'habits/createHabits',
-	async (data) => {
+	async (data, id) => {
 		try {
-			const response = await api.post('/habits', data);
+			const response = await api.post(`${id}/habits/`, data);
 			return response.data.newHabit;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -32,9 +35,12 @@ export const createHabitsThunk = createAsyncThunk(
 
 export const markDateAsDoneThunk = createAsyncThunk(
 	'habits/markDateAsDone',
-	async ({ habitId, date }) => {
+	async ({ habitId, date, id }) => {
 		try {
-			const response = await api.patch(`/habits/${habitId}/markDateAsDone`, date);
+			const response = await api.patch(
+				`${id}/habits/${habitId}/markDateAsDone`,
+				date,
+			);
 			return response.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -44,9 +50,12 @@ export const markDateAsDoneThunk = createAsyncThunk(
 
 export const updateStreakThunk = createAsyncThunk(
 	'habits/updateStreak',
-	async ({ habitId, date }) => {
+	async ({ habitId, date, id }) => {
 		try {
-			const response = await api.patch(`/habits/${habitId}/updateStreak`, date);
+			const response = await api.patch(
+				`${id}/habits/${habitId}/updateStreak`,
+				date,
+			);
 			return response.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);

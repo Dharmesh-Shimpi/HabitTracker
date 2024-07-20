@@ -7,7 +7,7 @@ export default class HabitRepo {
 	// get habits
 	static async getHabit(id) {
 		try {
-			const user = await User.findById(id).populate('habits');
+			const user = await User.findById({ _id: id }).populate('habits');
 			if (!user) {
 				throw new appError(`User not found`, 404);
 			}
