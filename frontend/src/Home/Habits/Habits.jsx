@@ -6,11 +6,11 @@ import { getHabitsThunk, setStatus } from './Habit.redux';
 import css from './Habits.module.css';
 
 export function Habits() {
-	const dispatch = useDispatch();
 	const { habits, error, loading, status } = useSelector(
 		(state) => state.habits,
 	);
 	const { id } = useSelector((state) => state.protected);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(getHabitsThunk(id));
@@ -29,18 +29,22 @@ export function Habits() {
 				<h1 className={css.h}>Habits</h1>
 				{loading && <p>Loading...</p>}
 				{error && <p>Error: {error}</p>}
-				{habits.length === 0 && <p>No habits found</p>}
 				<ul className={css.ul}>
-					{habits &&
-						habits.length > 0 &&
-						habits.map((data, i) => (
+					{habits ? (
+						habits.map((data) => (
 							<Link
 								to={`/${data._id}`}
-								className={css.link}
-								key={data.id}>
-								<li className={css.li}>{data.name}</li>
+								className={css.link}>
+								<li
+									className={css.li}
+									key={data._id}>
+									{data.name}
+								</li>
 							</Link>
-						))}
+						))
+					) : (
+						<p>No habits found</p>
+					)}
 				</ul>
 			</div>
 			<Streak />

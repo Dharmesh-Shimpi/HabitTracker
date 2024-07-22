@@ -1,7 +1,7 @@
 import UserSchema from './User.model.js';
-import { hashPassword, verifyPassword } from '../Middleware/bcrypt.js';
-import Auth from '../Middleware/jwtAuth.js';
-import appError from '../Middleware/errors.js';
+import { hashPassword, verifyPassword } from '../../Middleware/bcrypt.js';
+import Auth from '../../Middleware/jwtAuth.js';
+import appError from '../../Middleware/errors.js';
 
 export default class UserRepo {
 	static async registerUser(data) {
@@ -14,7 +14,7 @@ export default class UserRepo {
 				passwordHash: hashedPassword,
 			});
 			await newUser.save();
-			return newUser;
+			return {email, password};
 		} catch (err) {
 			console.log(err.message);
 			throw new appError('Error registering User', 401);

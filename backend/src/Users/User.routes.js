@@ -1,6 +1,6 @@
 import express from 'express';
-import User from '../Controller/User.controller.js';
-import Auth from 'Middleware/jwtAuth.js';
+import User from './User.controller.js';
+import Auth from '../../Middleware/jwtAuth.js';
 
 const router = express.Router();
 
@@ -10,6 +10,5 @@ router.get('/register/oauth', User.getOauthURL); // Get OAuth URL for registrati
 router.post('/register/oauth', User.OauthRegister); // Handle OAuth registration
 router.post('/login', User.login); // Login user
 router.get('/verify/:token', Auth.verify); // Verify JWT token
-router.get('/logout', User.logOut); // Logout user
 
 export default router;

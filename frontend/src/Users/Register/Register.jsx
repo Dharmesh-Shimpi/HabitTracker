@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	registerUser,
 	setSuccess
-} from '../auth.redux'; 
+} from '../../utils/auth.redux'; 
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../Oauth/Oauth';
 

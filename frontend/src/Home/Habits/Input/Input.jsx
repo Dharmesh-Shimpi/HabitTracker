@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createHabitsThunk } from '../Habit.redux';
 import css from './Input.module.css';
 
@@ -22,7 +22,8 @@ export function Input() {
 	const weeklyGoalInput = useRef();
 	const [selectedCategory, setSelectedCategory] = useState('');
 	const customCategoryInput = useRef();
-
+	const { id } = useSelector((state) => state.protected);
+	console.log(id);
 	function handleCategoryChange(e) {
 		const value = e.target.value;
 		setSelectedCategory(value);
@@ -36,19 +37,17 @@ export function Input() {
 				? customCategoryInput.current.value
 				: selectedCategory;
 
-		dispatch(
-			createHabitsThunk({
-				weeklyGoal,
-				name: customCategory,
-			}),
-		);
+		const data = {
+			weeklyGoal,
+			name: customCategory,
+		};
+		dispatch(createHabitsThunk({data, id}));
 	}
 
 	return (
 		<form
 			onSubmit={submit}
 			className={css.inputBox}>
-			
 			<div className={css.inputDiv}>
 				Choose One:
 				<select

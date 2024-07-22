@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import HabitRedux from './Home/Habits/Habit.redux';
-import authRedux from './Users/auth.redux';
-import ProtectedRedux from './Users/Protected.redux';
-import CalendarRedux from './Home/Main/Calendar/Calendar.redux';
+import authRedux from './utils/auth.redux';
+import ProtectedRedux from './utils/Protected.redux';
+import CalendarRedux from './Home/Calendar/Calendar.redux';
 
 const store = configureStore({
 	reducer: {

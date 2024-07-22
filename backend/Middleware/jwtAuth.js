@@ -6,7 +6,7 @@ import appError from './errors.js';
 export default class Auth {
 	static generateToken(payload) {
 		const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-			expiresIn: '1h',
+			expiresIn: '1d',
 		});
 		return token;
 	}

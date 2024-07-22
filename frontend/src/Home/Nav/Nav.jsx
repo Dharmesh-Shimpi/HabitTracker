@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Theme } from './Themes/Theme';
-import { setSuccess } from '../../Users/auth.redux';
 import api from '../../utils/axios';
 
 import css from './Nav.module.css';
@@ -11,7 +10,7 @@ export function Nav() {
 	const handleLogout = async () => {
 		try {
 			await api.get('/logout');
-			setSuccess(false);
+			localStorage.clear();
 			navigate('/login');
 		} catch (error) {
 			console.error('Error during logout:', error);

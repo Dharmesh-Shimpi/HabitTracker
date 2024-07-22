@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import { Home } from './Home/Home';
-import { Calendar } from './Home/Main/Calendar/Calendar';
+import { Calendar } from './Home/Calendar/Calendar';
 import { Input } from './Home/Habits/Input/Input';
 import { Register } from './Users/Register/Register';
 import { Login } from './Users/LogIn/Login';
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
 		),
 		children: [
 			{
-				path: ':id',
+				path: ':habitId',
 				element: <Calendar />,
 			},
 			{

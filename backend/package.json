@@ -1,6 +1,6 @@
 {
 	"name": "habittracker_backend",
-	"version": "1.0.1",
+	"version": "1.1.3",
 	"description": "habit tracker API's",
 	"main": "server.js",
 	"scripts": {

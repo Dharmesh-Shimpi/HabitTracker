@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import {
-	googleOauth,
-} from '../auth.redux';
+import { googleOauth } from '../../utils/auth.redux'; 
 
 import css from './Oauth.callback.module.css';
 

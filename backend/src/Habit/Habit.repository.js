@@ -1,46 +1,37 @@
 import Habit from './Habit.model.js';
 import User from '../Users/User.model.js';
-import appError from 'Middleware/errors.js';
-import CalendarRepo from './Calendar.repository.js';
+import appError from '../../Middleware/errors.js';
+import CalendarRepo from '../Calendar/Calendar.repository.js';
+import HabitModel from './Habit.model.js';
 
 export default class HabitRepo {
 	// get habits
 	static async getHabit(id) {
 		try {
-			const user = await User.findById({ _id: id }).populate('habits');
-			if (!user) {
-				throw new appError(`User not found`, 404);
+			const habits = await HabitModel.find({user: id});
+			if (!habits) {
+				throw new appError('User not found', 404);
 			}
-			return user.habits;
+
+			console.log(habits); // Log the habits array to verify
+			return habits;
 		} catch (err) {
 			throw new appError(`Error getting habit. Error: ${err.message}`, 401);
 		}
 	}
-	// Create Habit with associated calendar
-	static async createHabit({ userId, name, weeklyGoal }) {
-		try {
-			const user = await User.findById(userId).populate('habits');
-			if (!user) {
-				throw new appError(`User not found`, 404);
-			}
 
+	// Create Habit with associated calendar
+	static async createHabit({ user, name, weeklyGoal }) {
+		try {
 			const newHabit = new Habit({
 				name,
 				weeklyGoal,
+				user,
 			});
 
-			const savedHabit = await newHabit.save();
-			user.habits.push(savedHabit._id);
-			await user.save();
-
-			const calendarEntries = await CalendarRepo.createCalendar(
-				userId,
-				savedHabit._id,
-			);
-			savedHabit.calendar = calendarEntries.map((entry) => entry._id);
-			await savedHabit.save();
-
-			return user.habits;
+			await newHabit.save();
+			await CalendarRepo.createCalendar(newHabit._id);
+			return newHabit;
 		} catch (err) {
 			throw new appError(`Error creating habit. Error: ${err.message}`, 401);
 		}
@@ -75,31 +66,6 @@ export default class HabitRepo {
 			return user.habits;
 		} catch (err) {
 			throw new appError(`Error deleting habit. Error: ${err.message}`, 401);
-		}
-	}
-
-	// Update a habit
-	static async updateHabit(userId, habitId, { name, weeklyGoal }) {
-		try {
-			const user = await User.findById(userId).populate('habits');
-			if (!user) {
-				throw new appError(`User not found`, 404);
-			}
-
-			const habit = await Habit.findById(habitId);
-			if (!habit) {
-				throw new appError(`Habit not found`, 404);
-			}
-
-			// Update habit details
-			if (name) habit.name = name;
-			if (weeklyGoal) habit.weeklyGoal = weeklyGoal;
-
-			await habit.save();
-
-			return habit;
-		} catch (err) {
-			throw new appError(`Error updating habit. Error: ${err.message}`, 401);
 		}
 	}
 }

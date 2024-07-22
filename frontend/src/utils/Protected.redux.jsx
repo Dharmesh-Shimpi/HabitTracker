@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../utils/axios';
+import api from './axios';
 
 export const verifyToken = createAsyncThunk(
 	'auth/verifyToken',
 	async (token) => {
 		try {
 			const { data } = await api.get(`/verify/${token}`);
-			console.log(data);
 			return data;
 		} catch (err) {
 			return err;
@@ -30,7 +29,7 @@ const authSlice = createSlice({
 			})
 			.addCase(verifyToken.fulfilled, (state, action) => {
 				state.isAuthenticated = action.payload.isVerified;
-				state.id = action.payload.id;
+				state.id = String(action.payload.id);
 				state.loading = false;
 			})
 			.addCase(verifyToken.rejected, (state, action) => {

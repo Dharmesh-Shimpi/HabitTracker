@@ -6,17 +6,19 @@ import {
 	markDateAsDoneThunk,
 	getAdjacentMonthThunk,
 } from './Calendar.redux';
+
 import css from './Calendar.module.css';
 
 export function Calendar() {
-	const { id } = useParams();
-	if (!id) return <h1>Select a Habit</h1>
 	const dispatch = useDispatch();
+	const { habitId } = useParams();
+	if (!habitId) return <h1>Select a Habit</h1>;
+	
 	const [visibleButtonIndex, setVisibleButtonIndex] = useState(null);
 
 	// Fetch the habit using `id`
 	const habit = useSelector((state) =>
-		state.habits.habits.find((h) => h._id === id),
+		state.habits.find((h) => h._id === habitId),
 	);
 
 	// Get calendar data from Redux state
@@ -24,14 +26,14 @@ export function Calendar() {
 	const loading = useSelector((state) => state.calendar.loading);
 
 	useEffect(() => {
-		if (id) {
-			dispatch(getMonthThunk({ habitId: id }));
+		if (habitId) {
+			dispatch(getMonthThunk({ habitId }));
 		}
-	}, [dispatch, id]);
+	}, [dispatch, habitId]);
 
 	const handleMarkDateAsDone = (date) => {
 		dispatch(markDateAsDoneThunk({ habitId: id, date }))
-			.then(() => dispatch(getMonthThunk({ habitId: id })))
+			.then(() => dispatch(getMonthThunk({ habitId, id })))
 			.catch((error) => console.error('Failed to mark date as done:', error));
 	};
 
@@ -40,32 +42,20 @@ export function Calendar() {
 	};
 
 	const handlePrevMonth = () => {
-		const month = new Date(calendar[0]?.date).toLocaleString('default', {
-			month: 'long',
-		});
-		const year = new Date(calendar[0]?.date).getFullYear();
 		dispatch(
 			getAdjacentMonthThunk({
-				habitId: id,
-				userId: 'someUserId',
-				year,
-				month,
+				habitId,
+				id,
 				direction: 'prev',
 			}),
 		);
 	};
 
 	const handleNextMonth = () => {
-		const month = new Date(calendar[0]?.date).toLocaleString('default', {
-			month: 'long',
-		});
-		const year = new Date(calendar[0]?.date).getFullYear();
 		dispatch(
 			getAdjacentMonthThunk({
-				habitId: id,
-				userId: 'someUserId',
-				year,
-				month,
+				habitId,
+				id,
 				direction: 'next',
 			}),
 		);
@@ -78,11 +68,6 @@ export function Calendar() {
 	if (loading) {
 		return <div>Loading...</div>;
 	}
-
-	const monthYear = calendar[0]?.date.split(' ');
-	console.log(monthYear);
-	// const month = monthYear[1];
-	// const year = monthYear[3];
 
 	return (
 		<div>

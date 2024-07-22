@@ -46,3 +46,22 @@ label {
 .dist {
 	margin-top: 2rem;
 }
+
+.loading {
+	margin-right: 1rem;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 3px solid var(--color);
+	border-top-color: transparent;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}

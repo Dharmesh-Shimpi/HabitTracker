@@ -23,7 +23,11 @@ const habitSchema = new Schema({
 		default: 0,
 		required: true,
 	},
-
+	user: {
+		type: Schema.ObjectId,
+		ref: 'Habit',
+		required: true,
+	},
 });
 
 export default mongoose.model('Habit', habitSchema);
