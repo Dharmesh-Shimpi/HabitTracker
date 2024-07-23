@@ -12,8 +12,6 @@ export default class HabitRepo {
 			if (!habits) {
 				throw new appError('User not found', 404);
 			}
-
-			console.log(habits); // Log the habits array to verify
 			return habits;
 		} catch (err) {
 			throw new appError(`Error getting habit. Error: ${err.message}`, 401);

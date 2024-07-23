@@ -4,8 +4,8 @@ import Oauth from '../../Middleware/Oauth.js';
 export default class UserController {
 	static async register(req, res, next) {
 		try {
-			const {email, password}=await UserModel.registerUser(req.body);
-			res.send(email, password);
+			const { name, email, password } = await UserModel.registerUser(req.body);
+			res.json({ name, email, password });
 		} catch (err) {
 			next(err);
 		}

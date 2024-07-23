@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const CalendarSchema = new mongoose.Schema({
 	habitId: {
-		type: mongoose.Schema.Types.ObjectId,
+		type: mongoose.Schema.ObjectId,
 		ref: 'Habit',
 		required: true,
 	},

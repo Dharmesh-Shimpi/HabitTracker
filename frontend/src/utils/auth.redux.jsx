@@ -8,6 +8,7 @@ export const registerUser = createAsyncThunk(
 	async ({ name, email, password }) => {
 		try {
 			const res = await api.post('/register', { name, email, password });
+			console.log(res.data);
 			return res.data;
 		} catch (error) {
 			return error.response.data;
@@ -73,6 +74,7 @@ const authSlice = createSlice({
 			})
 			.addCase(registerUser.fulfilled, (state, action) => {
 				state.loading = false;
+				state.name = action.payload.name;
 				state.email = action.payload.email;
 				state.password = action.payload.password;
 				state.success = true;

@@ -1,16 +1,18 @@
-import axios from 'axios';
 // 'https://habittracker-backend-6psa.onrender.com/api'
 // http://localhost:5000/api
+
+import axios from 'axios';
+
 const api = axios.create({
-	baseURL: 'http://localhost:5000/api	',
+	baseURL: import.meta.env.VITE_BASE_URL,
 });
 
 export const calendarAPI = axios.create({
-	baseURL: 'http://localhost:5000/api/calendar',
+	baseURL: import.meta.env.VITE_CALENDAR_URL,
 });
 
 export const habitAPI = axios.create({
-	baseURL: 'http://localhost:5000/api/habits	',
+	baseURL: import.meta.env.VITE_HABITS_URL,
 });
 
 export default api;

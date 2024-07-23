@@ -14,7 +14,7 @@ export default class UserRepo {
 				passwordHash: hashedPassword,
 			});
 			await newUser.save();
-			return {email, password};
+			return {name, email, password};
 		} catch (err) {
 			console.log(err.message);
 			throw new appError('Error registering User', 401);

@@ -84,23 +84,20 @@ export default class CalendarRepo {
 		}
 	}
 
-	static async getMonth(habitId, year, month) {
+	static async getMonth(habitId) {
 		try {
-			const calendarEntries = await Calendar.aggregate([
-				{
-					$match: {
-						habitId,
-						month,
-						year,
-					},
-				},
-				{
-					$sort: {
-						date: 1,
-					},
-				},
-			]);
+			const monthIndex = new Date().getMonth();
+			const month = months[monthIndex];
+			const year = new Date().getFullYear();
 
+			console.log(habitId, year, month);
+			const calendarEntries = await Calendar.find({
+				habitId,
+				month,
+				year,
+			}).sort({ date: 1 });
+			
+			console.log(calendarEntries);
 			return calendarEntries;
 		} catch (err) {
 			throw new appError(

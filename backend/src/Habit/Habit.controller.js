@@ -6,7 +6,6 @@ export default class HabitController {
 	static async getHabit(req, res, next) {
 		try {
 			const id = req.params.id;
-			console.log(req.params);
 			if (!id) {
 				return res.status(400).json({ message: 'User ID is required' });
 			}
@@ -21,8 +20,7 @@ export default class HabitController {
 	// Create a new habit for the current user
 	static async createHabit(req, res, next) {
 		try {
-			const id = req.params.id;
-			console.log(id);
+			const id = req.params.id;	
 			const { name, weeklyGoal } = req.body;
 
 			if (!id || !weeklyGoal || !name) {
@@ -36,7 +34,7 @@ export default class HabitController {
 				name,
 				weeklyGoal,
 			});
-			await CalendarRepo.createCalendar(id, newHabit._id);
+			await CalendarRepo.createCalendar(newHabit._id);
 			res.status(201).json({ newHabit });
 		} catch (err) {
 			next(err);

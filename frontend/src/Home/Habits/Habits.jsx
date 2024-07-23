@@ -34,12 +34,10 @@ export function Habits() {
 						habits.map((data) => (
 							<Link
 								to={`/${data._id}`}
-								className={css.link}>
-								<li
-									className={css.li}
-									key={data._id}>
-									{data.name}
-								</li>
+								className={css.link}
+								key={data._id} 
+							>
+								<li className={css.li}>{data.name}</li>
 							</Link>
 						))
 					) : (

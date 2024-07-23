@@ -12,27 +12,19 @@ import css from './Calendar.module.css';
 export function Calendar() {
 	const dispatch = useDispatch();
 	const { habitId } = useParams();
-	if (!habitId) return <h1>Select a Habit</h1>;
-	
 	const [visibleButtonIndex, setVisibleButtonIndex] = useState(null);
 
-	// Fetch the habit using `id`
-	const habit = useSelector((state) =>
-		state.habits.find((h) => h._id === habitId),
-	);
+	if (!habitId) return <h1>Select a Habit</h1>;
 
 	// Get calendar data from Redux state
-	const calendar = useSelector((state) => state.calendar.calendar);
-	const loading = useSelector((state) => state.calendar.loading);
+	const { calendar, loading, success } = useSelector((state) => state.calendar);
 
 	useEffect(() => {
-		if (habitId) {
-			dispatch(getMonthThunk({ habitId }));
-		}
-	}, [dispatch, habitId]);
+		dispatch(getMonthThunk({ habitId }));
+	}, []);
 
 	const handleMarkDateAsDone = (date) => {
-		dispatch(markDateAsDoneThunk({ habitId: id, date }))
+		dispatch(markDateAsDoneThunk({ habitId, date }))
 			.then(() => dispatch(getMonthThunk({ habitId, id })))
 			.catch((error) => console.error('Failed to mark date as done:', error));
 	};
@@ -45,7 +37,8 @@ export function Calendar() {
 		dispatch(
 			getAdjacentMonthThunk({
 				habitId,
-				id,
+				month,
+				year,
 				direction: 'prev',
 			}),
 		);
@@ -55,59 +48,65 @@ export function Calendar() {
 		dispatch(
 			getAdjacentMonthThunk({
 				habitId,
-				id,
+				month,
+				year,
 				direction: 'next',
 			}),
 		);
 	};
 
-	if (!habit) {
-		return <div>Habit not found</div>;
-	}
+	useEffect(() => {}, [dispatch]);
 
 	if (loading) {
 		return <div>Loading...</div>;
 	}
 
+	let month = null;
+	let year = null;
+	if (success) {
+		console.log(calendar);
+		month = calendar[0].month;
+		year = calendar[0].year;
+		console.log(month, year);
+	}
+
 	return (
-		<div>
-			<h3>{habit.name}</h3>
+		<div className={css.body}>
 			<div className={css.monthYear}>
 				<button onClick={handlePrevMonth}>Previous</button>
-				{/* {month} {year} */}
+				{month} {year}
 				<button onClick={handleNextMonth}>Next</button>
 			</div>
-			<div className={css.calendarContainer}>
-				{calendar.map((entry, i) => {
-					const [day, , date] = entry.date.split(' ');
+			<div className={css.calendar}>
+				{calendar.map((entry) => {
 					return (
 						<div
 							className={css.dateDiv}
-							key={i}
+							key={entry._id}
 							onClick={() => handleDivClick(i)}>
 							<span className={css.date}>
-								{day}, {date}
+								{entry.day}, {entry.date}
 							</span>
 							<span className={css.value}>
 								{entry.value === 1 && <i className='fa-solid fa-check'></i>}
 								{entry.value === -1 && <i className='fa-solid fa-xmark'></i>}
 							</span>
-							{visibleButtonIndex === i && (
-								<div className={css.button}>
-									<i
-										className='fa-solid fa-check'
-										onClick={(e) => {
-											e.stopPropagation();
-											handleMarkDateAsDone(entry.date);
-										}}></i>
-									<i
-										className='fa-solid fa-xmark'
-										onClick={(e) => {
-											e.stopPropagation();
-											handleStreakUpdate(entry.date);
-										}}></i>
-								</div>
-							)}
+							{/* {/* {visibleButtonIndex === i && ( */}
+							<div className={css.button}>
+								<i
+									className='fa-solid fa-check'
+									onClick={(e) => {
+										e.stopPropagation();
+										handleMarkDateAsDone(entry.date);
+									}}></i>
+								<i
+									className='fa-solid fa-xmark'
+									onClick={(e) => {
+										e.stopPropagation();
+										handleStreakUpdate(entry.date);
+									}}></i>
+							</div>
+							{/* )} } */}
 						</div>
 					);
 				})}

@@ -32,20 +32,16 @@ export default class CalendarController {
 
 	// Get calendar entries for a specific month and year
 	static async getMonth(req, res, next) {
-		const { habitId } = req.params;
-
-		if (!habitId) {
-			return next(
-				new appError('Habit ID, User ID, year, and month are required', 400),
-			);
-		}
-
 		try {
-			const monthEntries = await CalendarRepo.getMonth(habitId);
-			res.status(200).json({
-				status: 'success',
-				data: monthEntries,
-			});
+			const { habitId } = req.params;
+			if (!habitId) {
+				return next(
+					new appError('Habit ID, User ID, year, and month are required', 400),
+				);
+			}
+
+			const data = await CalendarRepo.getMonth(habitId);
+			res.status(200).json(data);
 		} catch (err) {
 			next(err);
 		}
@@ -56,7 +52,7 @@ export default class CalendarController {
 		const { habitId } = req.params;
 		const { year, month, direction } = req.body;
 
-		if (!habitId || !userId || !year || !month || !direction) {
+		if (!habitId || !year || !month || !direction) {
 			return next(
 				new appError(
 					'Habit ID, User ID, year, month, and direction are required',
@@ -70,17 +66,13 @@ export default class CalendarController {
 		}
 
 		try {
-			const monthEntries = await CalendarRepo.getAdjacentMonth(
-				userId,
+			const data = await CalendarRepo.getAdjacentMonth(
 				habitId,
 				year,
 				month,
 				direction,
 			);
-			res.status(200).json({
-				status: 'success',
-				data: monthEntries,
-			});
+			res.status(200).json(data);
 		} catch (err) {
 			next(err);
 		}

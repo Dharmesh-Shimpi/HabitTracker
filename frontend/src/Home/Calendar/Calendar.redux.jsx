@@ -5,14 +5,16 @@ const initialState = {
 	calendar: [],
 	loading: false,
 	error: null,
+	success: false
 };
 
 export const getMonthThunk = createAsyncThunk(
 	'calendar/getMonth',
 	async ({ habitId }) => {
 		try {
-			const response = await api.get(`/calendar/${habitId}/`);
-			return response.data.data;
+			const response = await api.get(`/${habitId}`);
+			// console.log(response.data);
+			return response.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);
 		}
@@ -23,7 +25,7 @@ export const getAdjacentMonthThunk = createAsyncThunk(
 	'calendar/getAdjacentMonth',
 	async ({ habitId, direction, year, month }) => {
 		try {
-			const response = await api.patch(`/calendar/${habitId}`, {
+			const response = await api.patch(`/${habitId}`, {
 				direction,
 				year,
 				month,
@@ -39,7 +41,7 @@ export const markDateAsDoneThunk = createAsyncThunk(
 	'calendar/markDateAsDone',
 	async ({ habitId, date }) => {
 		try {
-			const response = await api.patch(`/calendar/${habitId}`, { value });
+			const response = await api.patch(`/${habitId}`, { value });
 			return response.data.data;
 		} catch (err) {
 			throw new Error(err.response.data.message);
@@ -57,10 +59,12 @@ const calendarSlice = createSlice({
 			.addCase(getMonthThunk.pending, (state) => {
 				state.loading = true;
 				state.error = null;
+				
 			})
 			.addCase(getMonthThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.calendar = action.payload;
+				state.success = true;
 			})
 			.addCase(getMonthThunk.rejected, (state, action) => {
 				state.loading = false;
@@ -74,6 +78,7 @@ const calendarSlice = createSlice({
 			.addCase(getAdjacentMonthThunk.fulfilled, (state, action) => {
 				state.loading = false;
 				state.calendar = action.payload;
+				state.success = true;
 			})
 			.addCase(getAdjacentMonthThunk.rejected, (state, action) => {
 				state.loading = false;
@@ -89,6 +94,7 @@ const calendarSlice = createSlice({
 				state.calendar = state.calendar.map((entry) =>
 					entry.date === action.meta.arg.date ? { ...entry, value: 1 } : entry,
 				);
+				state.success = true;
 			})
 			.addCase(markDateAsDoneThunk.rejected, (state, action) => {
 				state.loading = false;
